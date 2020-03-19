@@ -1,0 +1,2 @@
+# VRChatPlus
+VRChat公式サイトをちょっと便利にするChrome向け拡張機能
