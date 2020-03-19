@@ -55,8 +55,6 @@ window.onload = function () {
         if (window.location.href.indexOf("login") == -1) {
             const locationTitles = document.getElementsByClassName("location-title");
 
-            console.log(locationTitles);
-
             for (let i = 0; i < locationTitles.length; i++) {
                 const locationTitleElement = locationTitles[i];
 
