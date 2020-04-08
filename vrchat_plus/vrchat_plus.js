@@ -51,6 +51,35 @@ window.onload = function () {
         }
     }
 
+    const postInviteToMe = function(worldId, instanceId) {
+        const request = new XMLHttpRequest();
+        request.withCredentials = true;
+        request.open("POST", `/api/1/instances/${worldId}:${instanceId}/invite`);
+        request.send();
+    }
+
+    const createInviteMeDom = function(locationCardElement) {
+        const parentDiv = locationCardElement.firstElementChild;
+        if(parentDiv.getElementsByClassName("vrchatplus_invite_me_button").length <= 0) {
+            const clearfixDiv = parentDiv.getElementsByClassName("clearfix")[0];
+
+            const buttonDom = document.createElement("button");
+            buttonDom.classList.add("btn");
+            buttonDom.classList.add("btn-secondary");
+            buttonDom.classList.add("vrchatplus_invite_me_button");
+            buttonDom.type = "button";
+            buttonDom.textContent = "INVITE ME";
+
+            const splitHref = parentDiv.getElementsByTagName("a")[0].href.split("worldId=")[1].split("&instanceId=");
+
+            parentDiv.insertBefore(buttonDom, clearfixDiv);
+
+            buttonDom.addEventListener("click", function() {
+                postInviteToMe(splitHref[0], splitHref[1]);
+            });
+        }
+    }
+
     const intervalFunction = function () {
         if (window.location.href.indexOf("login") == -1) {
             const locationTitles = document.getElementsByClassName("location-title");
@@ -65,6 +94,12 @@ window.onload = function () {
                 const worldId = splitHref[0];
                 const instanceId = splitHref[1];
                 getInstanceById(locationTitleElement, worldId, instanceId);
+            }
+
+            const loactionCards = document.getElementsByClassName("location-card");
+            for (let i = 0; i < loactionCards.length; i++) {
+                const locationCard = loactionCards[i];
+                createInviteMeDom(locationCard);
             }
         }
     }
