@@ -6,6 +6,7 @@ window.onload = function () {
         const userCountSpan = document.createElement("span");
         userCountSpan.classList.add("badge");
         userCountSpan.classList.add("badge-secondary");
+        userCountSpan.classList.add("vrchat_instance_user_count");
         userCountSpan.textContent = `${userCount} `;
 
         const userCountIconSpan = document.createElement("span");
@@ -59,9 +60,8 @@ window.onload = function () {
     }
 
     const createInviteMeDom = function(locationCardElement) {
-        const parentDiv = locationCardElement.firstElementChild;
-        if(parentDiv.getElementsByClassName("vrchatplus_invite_me_button").length <= 0) {
-            const clearfixDiv = parentDiv.getElementsByClassName("clearfix")[0];
+        if(locationCardElement.getElementsByClassName("vrchatplus_invite_me_button").length <= 0) {
+            const clearfixDiv = locationCardElement.getElementsByClassName("clearfix")[0];
 
             const buttonDom = document.createElement("button");
             buttonDom.classList.add("btn");
@@ -70,12 +70,60 @@ window.onload = function () {
             buttonDom.type = "button";
             buttonDom.textContent = "INVITE ME";
 
-            const splitHref = parentDiv.getElementsByTagName("a")[0].href.split("worldId=")[1].split("&instanceId=");
+            const splitHref = locationCardElement.getElementsByTagName("a")[0].href.split("worldId=")[1].split("&instanceId=");
 
-            parentDiv.insertBefore(buttonDom, clearfixDiv);
+            locationCardElement.insertBefore(buttonDom, clearfixDiv);
 
             buttonDom.addEventListener("click", function() {
                 postInviteToMe(splitHref[0], splitHref[1]);
+            });
+        }
+    }
+
+    const createReLoadDOM = function(locationCardElement) {
+        if(locationCardElement.getElementsByClassName("vrchatplus_reload_instance_user_count").length <= 0) {
+            const inviteMeDOM = locationCardElement.getElementsByClassName("vrchatplus_invite_me_button")[0];
+
+            const reloadButtonDOM = document.createElement("button");
+            reloadButtonDOM.classList.add("btn");
+            reloadButtonDOM.classList.add("btn-secondary");
+            reloadButtonDOM.classList.add("vrchatplus_reload_instance_user_count");
+            reloadButtonDOM.type = "button";
+
+            const userCountIconSpan = document.createElement("span");
+            userCountIconSpan.title = "Reload number of users in instance";
+            userCountIconSpan.classList.add("fas");
+            userCountIconSpan.classList.add("fa-sync-alt");
+
+            reloadButtonDOM.appendChild(userCountIconSpan);
+
+            locationCardElement.insertBefore(reloadButtonDOM, inviteMeDOM);
+
+            const spaceSpan = document.createElement("span");
+            spaceSpan.style.width = "20px";
+            spaceSpan.style.height = "20px";
+            spaceSpan.textContent = " ";
+
+            locationCardElement.insertBefore(spaceSpan, reloadButtonDOM.nextSibling);
+
+            const splitHref = locationCardElement.getElementsByTagName("a")[0].href.split("worldId=")[1].split("&instanceId=");
+            reloadButtonDOM.addEventListener("click", function() {
+                const request = new XMLHttpRequest();
+                request.withCredentials = true;
+                request.open("GET", `/api/1/worlds/${splitHref[0]}/${splitHref[1]}`, true);
+                request.onload = function() {
+                    const cacheName = `${splitHref[0]}:${splitHref[1]}`;
+
+                    const jsonObject = JSON.parse(this.response);
+                    const userCount = jsonObject.n_users;
+                    instanceInfoCache[cacheName] = userCount;
+
+                    const countSpan = locationCardElement.getElementsByClassName("vrchat_instance_user_count")[0];
+                    countSpan.parentNode.removeChild(countSpan);
+                    
+                    createInstanceUserCountDOM(locationCardElement.getElementsByClassName("vrchatplus_location_title")[0], instanceInfoCache[cacheName]);
+                }
+                request.send();
             });
         }
     }
@@ -88,6 +136,7 @@ window.onload = function () {
                 const locationTitleElement = locationTitles[i];
 
                 locationTitleElement.classList.remove("location-title");
+                locationTitleElement.classList.add("vrchatplus_location_title");
                 const locationTitleATag = locationTitleElement.getElementsByTagName("a")[0];
                 locationTitleATag.style.color = "#FFFFFF";
                 const splitHref = locationTitleATag.href.split("worldId=")[1].split("&instanceId=");
@@ -98,8 +147,9 @@ window.onload = function () {
 
             const loactionCards = document.getElementsByClassName("location-card");
             for (let i = 0; i < loactionCards.length; i++) {
-                const locationCard = loactionCards[i];
+                const locationCard = loactionCards[i].firstElementChild;
                 createInviteMeDom(locationCard);
+                createReLoadDOM(locationCard);
             }
         }
     }
