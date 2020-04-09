@@ -2,6 +2,8 @@ window.onload = function () {
     const instanceInfoCache = new Map();
     const instanceInfoElement = new Map();
 
+    let reloadButtonTimer = 0;
+
     const createInstanceUserCountDOM = function (locationTitleElement, userCount) {
         const userCountSpan = document.createElement("span");
         userCountSpan.classList.add("badge");
@@ -108,28 +110,33 @@ window.onload = function () {
 
             const splitHref = locationCardElement.getElementsByTagName("a")[0].href.split("worldId=")[1].split("&instanceId=");
             reloadButtonDOM.addEventListener("click", function() {
-                const request = new XMLHttpRequest();
-                request.withCredentials = true;
-                request.open("GET", `/api/1/worlds/${splitHref[0]}/${splitHref[1]}`, true);
-                request.onload = function() {
-                    const cacheName = `${splitHref[0]}:${splitHref[1]}`;
+                if(reloadButtonTimer >= 1) {
+                    reloadButtonTimer = 0;
+                    const request = new XMLHttpRequest();
+                    request.withCredentials = true;
+                    request.open("GET", `/api/1/worlds/${splitHref[0]}/${splitHref[1]}`, true);
+                    request.onload = function() {
+                        const cacheName = `${splitHref[0]}:${splitHref[1]}`;
 
-                    const jsonObject = JSON.parse(this.response);
-                    const userCount = jsonObject.n_users;
-                    instanceInfoCache[cacheName] = userCount;
+                        const jsonObject = JSON.parse(this.response);
+                        const userCount = jsonObject.n_users;
+                        instanceInfoCache[cacheName] = userCount;
 
-                    const countSpan = locationCardElement.getElementsByClassName("vrchat_instance_user_count")[0];
-                    countSpan.parentNode.removeChild(countSpan);
+                        const countSpan = locationCardElement.getElementsByClassName("vrchat_instance_user_count")[0];
+                        countSpan.parentNode.removeChild(countSpan);
                     
-                    createInstanceUserCountDOM(locationCardElement.getElementsByClassName("vrchatplus_location_title")[0], instanceInfoCache[cacheName]);
+                        createInstanceUserCountDOM(locationCardElement.getElementsByClassName("vrchatplus_location_title")[0], instanceInfoCache[cacheName]);
+                    }
+                    request.send();
                 }
-                request.send();
             });
         }
     }
 
     const intervalFunction = function () {
         if (window.location.href.indexOf("login") == -1) {
+            reloadButtonTimer++;
+
             const locationTitles = document.getElementsByClassName("location-title");
 
             for (let i = 0; i < locationTitles.length; i++) {
