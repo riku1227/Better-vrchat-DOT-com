@@ -1,3 +1,22 @@
+const VRChatAPI = {
+    getWorldInstanceByID : function (worldId, instanceId) {
+        return new Promise((callback) => {
+            const request = new XMLHttpRequest();
+            request.open("GET", `/api/1/worlds/${worldId}/${instanceId}`, true);
+            request.onload = function () {
+                callback(this);
+            };
+            request.send();
+        });
+    },
+
+    postInviteToMe: function(worldId, instanceId) {
+        const request = new XMLHttpRequest();
+        request.open("POST", `/api/1/instances/${worldId}:${instanceId}/invite`);
+        request.send();
+    }
+};
+
 window.onload = function () {
     const instanceInfoCache = new Map();
     const instanceInfoElement = new Map();
@@ -27,7 +46,7 @@ window.onload = function () {
         locationTitleElement.insertBefore(userCountSpan, spaceSpan);
     }
 
-    const getInstanceById = function (locationTitleElement, worldId, instanceId) {
+    const loadInstanceUserCount = function (locationTitleElement, worldId, instanceId) {
         const cacheName = `${worldId}:${instanceId}`;
         if (instanceInfoCache[cacheName] != undefined) {
             createInstanceUserCountDOM(locationTitleElement, instanceInfoCache[cacheName]);
@@ -37,28 +56,17 @@ window.onload = function () {
             } else {
                 instanceInfoElement[cacheName] = new Array(locationTitleElement);
 
-                const request = new XMLHttpRequest();
-                request.withCredentials = true;
-                request.open("GET", `/api/1/worlds/${worldId}/${instanceId}`, true);
-                request.onload = function () {
-                    const jsonObject = JSON.parse(this.response);
+                VRChatAPI.getWorldInstanceByID(worldId, instanceId).then((request) => {
+                    const jsonObject = JSON.parse(request.response);
                     const userCount = jsonObject.n_users;
                     instanceInfoCache[cacheName] = userCount;
 
                     for (let i = 0; i < instanceInfoElement[cacheName].length; i++) {
                         createInstanceUserCountDOM(instanceInfoElement[cacheName][i], userCount);
                     }
-                }
-                request.send();
+                });
             }
         }
-    }
-
-    const postInviteToMe = function(worldId, instanceId) {
-        const request = new XMLHttpRequest();
-        request.withCredentials = true;
-        request.open("POST", `/api/1/instances/${worldId}:${instanceId}/invite`);
-        request.send();
     }
 
     const createInviteMeDom = function(locationCardElement) {
@@ -77,7 +85,7 @@ window.onload = function () {
             locationCardElement.insertBefore(buttonDom, clearfixDiv);
 
             buttonDom.addEventListener("click", function() {
-                postInviteToMe(splitHref[0], splitHref[1]);
+                VRChatAPI.postInviteToMe(splitHref[0], splitHref[1]);
             });
         }
     }
@@ -112,13 +120,11 @@ window.onload = function () {
             reloadButtonDOM.addEventListener("click", function() {
                 if(reloadButtonTimer >= 1) {
                     reloadButtonTimer = 0;
-                    const request = new XMLHttpRequest();
-                    request.withCredentials = true;
-                    request.open("GET", `/api/1/worlds/${splitHref[0]}/${splitHref[1]}`, true);
-                    request.onload = function() {
+
+                    VRChatAPI.getWorldInstanceByID(splitHref[0], splitHref[1]).then((request) => {
                         const cacheName = `${splitHref[0]}:${splitHref[1]}`;
 
-                        const jsonObject = JSON.parse(this.response);
+                        const jsonObject = JSON.parse(request.response);
                         const userCount = jsonObject.n_users;
                         instanceInfoCache[cacheName] = userCount;
 
@@ -126,8 +132,7 @@ window.onload = function () {
                         countSpan.parentNode.removeChild(countSpan);
                     
                         createInstanceUserCountDOM(locationCardElement.getElementsByClassName("vrchatplus_location_title")[0], instanceInfoCache[cacheName]);
-                    }
-                    request.send();
+                    });
                 }
             });
         }
@@ -149,7 +154,7 @@ window.onload = function () {
                 const splitHref = locationTitleATag.href.split("worldId=")[1].split("&instanceId=");
                 const worldId = splitHref[0];
                 const instanceId = splitHref[1];
-                getInstanceById(locationTitleElement, worldId, instanceId);
+                loadInstanceUserCount(locationTitleElement, worldId, instanceId);
             }
 
             const loactionCards = document.getElementsByClassName("location-card");
