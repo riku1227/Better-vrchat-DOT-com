@@ -11,7 +11,8 @@
     "content_scripts": [
         {
             "matches": [
-                "https://vrchat.com/home/*"
+                "https://vrchat.com/home/*",
+                "https://www.vrchat.com/home/*"
             ],
             "js": [
                 "vrchat_plus.js"
