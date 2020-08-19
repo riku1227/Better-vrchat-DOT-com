@@ -14,6 +14,66 @@ const VRChatAPI = {
     const request = new XMLHttpRequest();
     request.open("POST", `/api/1/instances/${worldId}:${instanceId}/invite`);
     request.send();
+  },
+
+  setAvatar: function(avatarId) {
+    const request = new XMLHttpRequest();
+    request.open("PUT", `/api/1/avatars/${avatarId}/select`);
+    request.send();
+  },
+
+  removeVRChatComURL: function(url) {
+    return url.replace("https://www.vrchat.com/", "").replace("https://vrchat.com/", "").replace("home/", "");
+  }
+};
+
+const IntervalID = {
+  avatarsInterval: 0
+};
+
+const DOMEditor = {
+  getChildElementsByClassName: function(parent, className) {
+    const childList = parent.children;
+    const resultList = [];
+    for(let i = 0; i < childList.length; i++) {
+      if(childList[i].classList.contains(className)) {
+        resultList.push(childList[i]);
+      }
+    }
+
+    return resultList;
+  },
+
+  getChildElementsByTagName: function(parent, tagName) {
+    const childList = parent.children;
+    const resultList = [];
+    for(let i = 0; i < childList.length; i++) {
+      if(childList[i].tagName.toLowerCase() == tagName.toLowerCase()) {
+        resultList.push(childList[i]);
+      }
+    }
+
+    return resultList;
+  },
+
+  createButton: function (buttonText, buttonIconClassList, spanTitle) {
+    const buttonDOM = document.createElement("button");
+    buttonDOM.classList.add("btn");
+    buttonDOM.classList.add("btn-secondary");
+    buttonDOM.type = "button";
+
+    buttonDOM.textContent = buttonText;
+
+    const buttonIconSpan = document.createElement("span");
+    buttonIconSpan.title = spanTitle;
+    buttonIconClassList.forEach((value) => {
+      buttonIconSpan.classList.add(value);
+    });
+    buttonIconSpan.style.marginRight = "8px";
+
+    buttonDOM.insertBefore(buttonIconSpan, buttonDOM.firstChild);
+
+    return buttonDOM;
   }
 };
 
@@ -167,4 +227,54 @@ window.onload = function () {
   }
 
   setInterval(intervalFunction, 3000);
+
+  const avatarsFunction = function () {
+    if (location.href.indexOf("home/avatars") != -1) {
+      console.log("アバター！！！！！！！");
+
+      const intervalAvatar = function () {
+        const privateContainers = document.getElementsByClassName("private");
+        for (let i = 0; i < privateContainers.length; i++) {
+          const privateContainer = privateContainers[i];
+          privateContainer.classList.remove("private");
+
+          
+          const privateAvatarContent = DOMEditor.getChildElementsByClassName(privateContainer.firstElementChild, "col-md-8");
+          const buttonDOM = DOMEditor.createButton("Set Avatar", ["fas", "fa-user-tie"], "Set Avatar");
+          buttonDOM.addEventListener("click", ()=> {
+            const avatarId = VRChatAPI.removeVRChatComURL(
+              DOMEditor.getChildElementsByTagName(privateAvatarContent[0], "h4")[0].firstChild.href
+              ).replace("avatar/", "");
+              VRChatAPI.setAvatar(avatarId);
+          });
+          privateAvatarContent[0].appendChild(buttonDOM);
+        }
+      };
+
+      IntervalID.avatarsInterval = setInterval(intervalAvatar, 1500);
+    }
+  };
+
+  const bodyContent = document.getElementById("home");
+  console.log(bodyContent);
+
+  const bodyObserver = new MutationObserver((mutations) => {
+    mutations.forEach(() => {
+      avatarsFunction();
+      const homeContent = document.getElementsByClassName("home-content")[0];
+      const homeContentObserver = new MutationObserver(() => {
+        clearInterval(IntervalID.avatarsInterval);
+
+        avatarsFunction();
+      });
+
+      homeContentObserver.observe(homeContent, {
+        childList: true
+      });
+    });
+  });
+
+  bodyObserver.observe(bodyContent, {
+    childList: true
+  });
 };
