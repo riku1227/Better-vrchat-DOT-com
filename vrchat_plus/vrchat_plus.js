@@ -1,3 +1,11 @@
+const isEmptyString = function(value) {
+  if(value == "" || value == undefined || value == null) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 const VRChatAPI = {
   getWorldInstanceByID: function (worldId, instanceId) {
     return new Promise((callback) => {
@@ -6,6 +14,28 @@ const VRChatAPI = {
       request.onload = function () {
         callback(this);
       };
+      request.send();
+    });
+  },
+
+  getFavoriteAvatarIDs: function () {
+    return new Promise((callback) => {
+      const request = new XMLHttpRequest();
+      request.open("GET", "/api/1/favorites?n=16&tags=avatars1");
+      request.onload = function() {
+        callback(this);
+      }
+      request.send();
+    });
+  },
+
+  getFavoriteAvatars: function() {
+    return new Promise((callback) => {
+      const request = new XMLHttpRequest();
+      request.open("GET", "/api/1/avatars/favorites?n=16");
+      request.onload = function() {
+        callback(this);
+      }
       request.send();
     });
   },
@@ -20,6 +50,17 @@ const VRChatAPI = {
     const request = new XMLHttpRequest();
     request.open("PUT", `/api/1/avatars/${avatarId}/select`);
     request.send();
+  },
+
+  deleteFavorite: function(favoriteId) {
+    return new Promise((callback) => {
+      const request = new XMLHttpRequest();
+      request.open("DELETE", `/api/1/favorites/${favoriteId}`);
+      request.onload = function() {
+        callback(this);
+      }
+      request.send();
+    });
   },
 
   removeVRChatComURL: function(url) {
@@ -64,16 +105,129 @@ const DOMEditor = {
 
     buttonDOM.textContent = buttonText;
 
-    const buttonIconSpan = document.createElement("span");
-    buttonIconSpan.title = spanTitle;
-    buttonIconClassList.forEach((value) => {
-      buttonIconSpan.classList.add(value);
-    });
-    buttonIconSpan.style.marginRight = "8px";
+    if(buttonIconClassList.length > 0) {
+      const buttonIconSpan = document.createElement("span");
+      buttonIconSpan.title = spanTitle;
+      buttonIconClassList.forEach((value) => {
+        buttonIconSpan.classList.add(value);
+      });
 
-    buttonDOM.insertBefore(buttonIconSpan, buttonDOM.firstChild);
+      if(buttonText != "" && buttonText != null && buttonText != undefined) {
+        buttonIconSpan.style.marginRight = "8px";
+      }
+
+      buttonDOM.insertBefore(buttonIconSpan, buttonDOM.firstChild);
+    }
 
     return buttonDOM;
+  },
+
+  createCollapseRowList: function(title, line) {
+    const parentDiv = document.createElement("div");
+    const parentH3 = document.createElement("h3");
+    const collapseButton = DOMEditor.createButton(null, ["fa", "fa-plus-circle"]);
+    collapseButton.style.marginRight = "8px";
+    parentH3.textContent = title;
+    parentH3.insertBefore(collapseButton, parentH3.firstChild);
+
+    const collapseDiv = document.createElement("div");
+    collapseDiv.classList.add("collapse");
+    const listDiv = document.createElement("div");
+    listDiv.classList.add(line);
+    collapseDiv.appendChild(listDiv);
+
+    collapseButton.addEventListener("click", () => {
+      const buttonSpan = collapseButton.firstChild;
+      if(collapseDiv.classList.contains("show")) {
+        collapseDiv.classList.remove("show");
+
+        buttonSpan.classList.remove("fa-minus-circle");
+        buttonSpan.classList.add("fa-plus-circle");
+      } else {
+        collapseDiv.classList.add("show");
+
+        buttonSpan.classList.remove("fa-plus-circle");
+        buttonSpan.classList.add("fa-minus-circle");
+      }
+    });
+
+    parentDiv.appendChild(parentH3);
+
+    parentDiv.appendChild(collapseDiv);
+
+    return {
+      parent: parentDiv,
+      list: listDiv
+    };
+  },
+
+  createAvatarContainer: function(avatarName, avatarDescription, avatarThumbUrl, avatarId, favoriteId) {
+    const parentDiv = document.createElement("div");
+    parentDiv.classList.add("css-bj8sxz");
+    parentDiv.classList.add("col-12");
+
+    const searchContainer = document.createElement("div");
+    searchContainer.classList.add("search-container");
+    parentDiv.appendChild(searchContainer);
+
+    const rowDiv = document.createElement("div");
+    rowDiv.classList.add("row");
+    searchContainer.appendChild(rowDiv);
+
+    const colLeftContainer = document.createElement("div");
+    colLeftContainer.classList.add("col-12");
+    colLeftContainer.classList.add("col-md-4");
+    rowDiv.appendChild(colLeftContainer);
+
+    const imgATagContainer = document.createElement("a");
+    imgATagContainer.href = `/home/avatar/${avatarId}`;
+    colLeftContainer.appendChild(imgATagContainer);
+
+    const avatarThumbImg = document.createElement("img");
+    avatarThumbImg.classList.add("w-100");
+    avatarThumbImg.src = avatarThumbUrl;
+    avatarThumbImg.title = avatarName;
+    imgATagContainer.appendChild(avatarThumbImg);
+
+    const colRightContainer = document.createElement("div");
+    colRightContainer.classList.add("col-12");
+    colRightContainer.classList.add("col-md-8");
+    rowDiv.appendChild(colRightContainer);
+
+    const avatarTitleH4 = document.createElement("h4");
+    colRightContainer.appendChild(avatarTitleH4);
+    
+    const avatarTitleA = document.createElement("a");
+    avatarTitleA.href = `/home/avatar/${avatarId}`;
+    avatarTitleA.textContent = avatarName;
+    avatarTitleH4.appendChild(avatarTitleA);
+
+    if(!isEmptyString(avatarDescription)) {
+      const avatarDescriptionP = document.createElement("p");
+      avatarDescriptionP.textContent = avatarDescription;
+      colRightContainer.appendChild(avatarDescriptionP); 
+    }
+
+    const setAvatarButton = DOMEditor.createButton("Set Avatar", ["fas", "fa-user-tie"], "Set avatar");
+    setAvatarButton.addEventListener("click", () => {
+      VRChatAPI.setAvatar(avatarId);
+    });
+    colRightContainer.appendChild(setAvatarButton);
+
+    if(!isEmptyString(favoriteId)) {
+      const unFavoriteButton = DOMEditor.createButton("Unfav Avatar", ["fas", "fa-user-minus"]);
+      unFavoriteButton.addEventListener("click", () => {
+        if(window.confirm("アバターのFavoriteを解除しますか？\nUnfav avatar?")) {
+          VRChatAPI.deleteFavorite(favoriteId).then((request) => {
+            parentDiv.remove();
+          })
+        }
+      });
+      unFavoriteButton.style.marginLeft = "8px";
+      colRightContainer.appendChild(unFavoriteButton);
+    }
+
+    return parentDiv;
   }
 };
 
@@ -230,7 +384,6 @@ window.onload = function () {
 
   const avatarsFunction = function () {
     if (location.href.indexOf("home/avatars") != -1) {
-      console.log("アバター！！！！！！！");
 
       const intervalAvatar = function () {
         const privateContainers = document.getElementsByClassName("private");
@@ -245,13 +398,56 @@ window.onload = function () {
             const avatarId = VRChatAPI.removeVRChatComURL(
               DOMEditor.getChildElementsByTagName(privateAvatarContent[0], "h4")[0].firstChild.href
               ).replace("avatar/", "");
-              VRChatAPI.setAvatar(avatarId);
+            VRChatAPI.setAvatar(avatarId);
           });
           privateAvatarContent[0].appendChild(buttonDOM);
         }
       };
 
       IntervalID.avatarsInterval = setInterval(intervalAvatar, 1500);
+
+      const homeContent = document.getElementsByClassName("home-content")[0];
+      const col12 = DOMEditor.getChildElementsByClassName(DOMEditor.getChildElementsByClassName(homeContent, "row")[0], "col-12")[0];
+
+      const favoriteAvatarListDOM = DOMEditor.createCollapseRowList("Favorite Avatars", "row");
+      col12.appendChild(favoriteAvatarListDOM.parent);
+
+      favoriteAvatarListDOM.parent.style.display = "none";
+
+      const favoriteAvatarsMap = new Map();
+
+      VRChatAPI.getFavoriteAvatarIDs().then((request) => {
+        const favoriteIds = JSON.parse(request.response);
+        favoriteIds.forEach((value) => {
+          favoriteAvatarsMap.set(value.favoriteId,
+          {
+            avatarId: value.favoriteId,
+            favoriteId: value.id
+          });
+        });
+
+        return VRChatAPI.getFavoriteAvatars();
+      })
+      .then((request) => {
+        const favoriteAvatars = JSON.parse(request.response);
+        favoriteAvatars.forEach((value) => {
+          const avatarObject = favoriteAvatarsMap.get(value.id);
+          if(avatarObject != undefined) {
+            avatarObject.name = value.name;
+            avatarObject.description = value.description;
+            avatarObject.thumbUrl = value.thumbnailImageUrl;
+
+            favoriteAvatarsMap.set(value.id, avatarObject);
+          }
+        });
+
+        favoriteAvatarsMap.forEach((value, key) => {
+          const favoriteAvatarContainer = DOMEditor.createAvatarContainer(value.name, value.description, value.thumbUrl, value.avatarId, value.favoriteId);
+          favoriteAvatarListDOM.list.appendChild(favoriteAvatarContainer);
+        });
+
+        favoriteAvatarListDOM.parent.style.display = "block";
+      });
     }
   };
 
