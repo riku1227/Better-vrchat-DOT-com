@@ -18,6 +18,17 @@ const VRChatAPI = {
     });
   },
 
+  getAvatar : function(avatarId) {
+    return new Promise((callback) => {
+      const request = new XMLHttpRequest();
+      request.open("GET", `/api/1/avatars/${avatarId}`);
+      request.onload = function() {
+        callback(this);
+      }
+      request.send();
+    });
+  },
+
   getFavoriteAvatarIDs: function () {
     return new Promise((callback) => {
       const request = new XMLHttpRequest();
@@ -44,6 +55,18 @@ const VRChatAPI = {
     const request = new XMLHttpRequest();
     request.open("POST", `/api/1/instances/${worldId}:${instanceId}/invite`);
     request.send();
+  },
+
+  addFavoriteAvatar: function(avatarId) {
+    return new Promise((callback) => {
+      const request = new XMLHttpRequest();
+      request.open("POST", "/api/1/favorites");
+      request.onload = function() {
+        callback(this);
+      }
+      request.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded");
+      request.send(`type=avatar&favoriteId=${avatarId}&tags=avatars1`);
+    });
   },
 
   setAvatar: function(avatarId) {
@@ -228,6 +251,40 @@ const DOMEditor = {
     }
 
     return parentDiv;
+  },
+
+  createTextInputForm: function(inputId, placeholder , buttonIconClassList) {
+    const parentDiv = document.createElement("div");
+    parentDiv.classList.add("input-group");
+
+    const textInput = document.createElement("input");
+    textInput.type = "text";
+    textInput.classList.add("form-control");
+    textInput.placeholder = placeholder;
+    textInput.id = inputId;
+    parentDiv.appendChild(textInput);
+
+    const appendSpan = document.createElement("span");
+    appendSpan.classList.add("input-group-append");
+    const buttonElement = document.createElement("button");
+    buttonElement.classList.add("btn");
+    buttonElement.classList.add("btn-outline-secondary");
+
+    if(buttonIconClassList.length > 0) {
+      const buttonIconSpan = document.createElement("span");
+      buttonIconClassList.forEach((value) => {
+        buttonIconSpan.classList.add(value);
+      });
+      buttonElement.appendChild(buttonIconSpan);
+    }
+    appendSpan.appendChild(buttonElement);
+    parentDiv.appendChild(appendSpan);
+
+    return {
+      parent: parentDiv,
+      button: buttonElement,
+      input: textInput
+    };
   }
 };
 
@@ -413,6 +470,74 @@ window.onload = function () {
       col12.appendChild(favoriteAvatarListDOM.parent);
 
       favoriteAvatarListDOM.parent.style.display = "none";
+
+      const addFavoriteTitle = document.createElement("h4");
+      addFavoriteTitle.textContent = "アバターをお気に入り登録する";
+      addFavoriteTitle.style.marginLeft = "16px";
+      addFavoriteTitle.style.marginBottom = "0px";
+      favoriteAvatarListDOM.list.appendChild(addFavoriteTitle);
+      const addFavoriteAvatarForm = DOMEditor.createTextInputForm("vrchat_plus_add_favorite_avatar_input", "Avatar ID", ["fas", "fa-plus"]);
+      addFavoriteAvatarForm.parent.style.margin = "16px";
+
+      const messageP = document.createElement("p");
+      messageP.style.marginLeft = "16px";
+      messageP.style.whiteSpace = "pre-wrap";
+
+      addFavoriteAvatarForm.button.addEventListener("click", () => {
+        const avatarIdRegex = /avtr_[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/
+        const formValue = addFavoriteAvatarForm.input.value;
+        if(avatarIdRegex.test(formValue)) {
+          VRChatAPI.addFavoriteAvatar(formValue).then((request) => {
+            const nowDate = new Date();
+            let resultMessage = "";
+            let resultStatusCode = request.status;
+            let favoriteId = "";
+
+            switch (resultStatusCode) {
+              case 200:
+                resultMessage = `アバターをお気に入りに追加しました`;
+                addFavoriteAvatarForm.input.value = "";
+
+                const favoriteObject = JSON.parse(request.response);
+                favoriteId = favoriteObject.id;
+              break;
+              case 404:
+                resultMessage = `入力されたアバターIDのアバターが見つかりませんでした`;
+              break;
+              case 400:
+                const errorJson = JSON.parse(request.response);
+                if(errorJson.error.message == "You already have that avatar favorited") {
+                  resultMessage = `これ以上アバターをお気に入りに登録することはできません`;
+                } else {
+                  resultMessage = `原因不明のエラーが発生しました\n[Status Code: ${request.status}]: ${request.response}`;
+                }
+              break;
+              default:
+                resultMessage = `原因不明のエラーが発生しました\n[Status Code: ${request.status}]: ${request.response}`;
+            }
+
+            messageP.textContent = `[${nowDate.getHours()}:${nowDate.getMinutes()}:${nowDate.getSeconds()}] ${resultMessage}`;
+            if(resultStatusCode == 200) {
+              VRChatAPI.getAvatar(formValue).then((request) => {
+                if(request == undefined) {
+                  return;
+                }
+                
+                const avatarObject = JSON.parse(request.response);
+                const addFavoriteAvatarContainer = DOMEditor.createAvatarContainer(avatarObject.name, avatarObject.description, avatarObject.thumbnailImageUrl, avatarObject.id, favoriteId);
+
+                favoriteAvatarListDOM.list.insertBefore(addFavoriteAvatarContainer, messageP.nextSibling);
+              });
+            }
+          });
+        } else {
+          const nowDate = new Date();
+          messageP.textContent = `[${nowDate.getHours()}:${nowDate.getMinutes()}:${nowDate.getSeconds()}] アバターIDを入力してください`;
+        }
+      });
+
+      favoriteAvatarListDOM.list.appendChild(addFavoriteAvatarForm.parent);
+      favoriteAvatarListDOM.list.appendChild(messageP);
 
       const favoriteAvatarsMap = new Map();
 
