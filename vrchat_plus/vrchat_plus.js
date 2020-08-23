@@ -255,6 +255,13 @@ const DOMEditor = {
     });
     colRightContainer.appendChild(setAvatarButton);
 
+    const copyAvatarIDButton = DOMEditor.createButton("Copy Avatar ID", ["far", "fa-copy"], "Copy Avatar ID");
+    copyAvatarIDButton.style.marginLeft = "8px";
+    copyAvatarIDButton.addEventListener("click", () => {
+      navigator.clipboard.writeText(avatarId);
+    });
+    colRightContainer.appendChild(copyAvatarIDButton);
+
     if (!isEmptyString(favoriteId)) {
       const unFavoriteButton = DOMEditor.createButton("Unfav Avatar", ["fas", "fa-user-minus"]);
       unFavoriteButton.addEventListener("click", () => {
