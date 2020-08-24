@@ -641,6 +641,9 @@ window.onload = function () {
       favoriteAvatarListDOM.list.appendChild(importButton);
       importButton.addEventListener("click", () => {
         const jsonFiles = importInput.files;
+        if(jsonFiles.length == 0) {
+          return;
+        }
         let fapObject = {};
         readFileAsText(jsonFiles[0]).then((result) => {
           try {
