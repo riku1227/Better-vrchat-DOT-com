@@ -686,7 +686,7 @@ window.onload = function () {
           }
           
           const importPromise = []
-          fapObject.avatars.reverse().forEach((value) => {
+          fapObject.avatars.forEach((value) => {
             importPromise.push(VRChatAPI.addFavoriteAvatar(value));
           });
           return Promise.all(importPromise);
