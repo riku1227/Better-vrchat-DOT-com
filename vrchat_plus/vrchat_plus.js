@@ -508,7 +508,9 @@ window.onload = function () {
       messageP.style.marginLeft = "16px";
       messageP.style.whiteSpace = "pre-wrap";
 
-      let avatarContainerPrevElement = messageP;
+      const unFavAllAvatarButton = DOMEditor.createButton("Unfav All Avatar", ["fas", "fa-fire-alt"], "Unfav All Avatar");
+      unFavAllAvatarButton.style.marginRight = "calc(100% - 216px)";
+      unFavAllAvatarButton.style.marginLeft = "16px";
 
       addFavoriteAvatarForm.button.addEventListener("click", () => {
         const avatarIdRegex = /avtr_[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/
@@ -564,11 +566,34 @@ window.onload = function () {
         }
       });
 
+      unFavAllAvatarButton.addEventListener("click", () => {
+        if(window.confirm("お気に入り登録されているアバターをすべてお気に入り解除します、本当によろしいですか？")) {
+          VRChatAPI.getFavoriteAvatarIDs().then((request) => {
+            const currentFavoriteIds = JSON.parse(request.response);
+            const promises = [];
+            currentFavoriteIds.forEach((value) => {
+              promises.push(VRChatAPI.deleteFavorite(value.id));
+            });
+            return Promise.all(promises);
+          }).then((requests) => {
+            const removeFavoriteContainer = document.getElementsByClassName("vrchat_plus_favorite_avatars_container");
+            const removeFavoriteContainerSize = removeFavoriteContainer.length;
+            for (let i = 0; i < removeFavoriteContainerSize; i++) {
+              removeFavoriteContainer[0].remove();
+            }
+            alert("すべてのお気に入りに登録されたアバターをお気に入り解除しました");
+          });
+        } 
+      });
+
       favoriteAvatarListDOM.list.appendChild(addFavoriteAvatarForm.parent);
       favoriteAvatarListDOM.list.appendChild(messageP);
+      favoriteAvatarListDOM.list.appendChild(unFavAllAvatarButton);
 
       const fapTitle = document.createElement("h4");
       fapTitle.textContent = "Favorite Avatar Preset System (FAP System)";
+      fapTitle.style.marginLeft = "16px";
+      fapTitle.style.marginTop = "16px";
       const fapDescriptionP = document.createElement("p");
       fapDescriptionP.textContent = "プリセット(FAP)のエクスポート\nファイル名をフォームに記入し、「Export FAP」ボタンを押してください\n\nプリセットのロード\n「ファイルを選択」 ボタンを押し、プリセット(FAP)ファイルを読み込ませ\n「Import FAP」ボタンを押すと確認ダイアログが出てくるので、内容をしっかり読みOKを押してください\nインポート完了すると「インポート完了」と出てきます";
       fapDescriptionP.style.whiteSpace = "pre-wrap";
