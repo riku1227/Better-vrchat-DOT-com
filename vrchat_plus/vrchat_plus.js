@@ -754,7 +754,6 @@ window.onload = function () {
   };
 
   const bodyContent = document.getElementById("home");
-  console.log(bodyContent);
 
   const bodyObserver = new MutationObserver((mutations) => {
     mutations.forEach(() => {
