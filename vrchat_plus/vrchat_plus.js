@@ -647,6 +647,8 @@ window.onload = function () {
             fapObject = JSON.parse(result);
             if (fapObject.presetName == undefined || fapObject.avatars.length == 0) {
               alert("選択されたファイルはFAP形式ではないか、アバターリストの中が空です");
+            } else if (fapObject.avatars.length > 16) {
+              alert("17以上のアバターをお気に入りに登録することはできません");
             } else {
               if (window.confirm(`お気に入りアバタープリセット 「${fapObject.presetName}」 をロードしますか？`)) {
                 if (window.confirm("現在お気に入り登録されているアバターはすべて上書きされます\nFAPをエクスポートするなど必ずバックアップ/上書きされても問題ない状態にしてくさだい\n本当にお気に入りプリセットをロードしますか？")) {
