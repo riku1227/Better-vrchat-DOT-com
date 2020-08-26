@@ -488,10 +488,14 @@ window.onload = function () {
 
       IntervalID.avatarsInterval = setInterval(intervalAvatar, 1500);
 
+      if(document.getElementById("vrchat_plus_favorite_avatars_list") != undefined) {
+        return;
+      }
       const homeContent = document.getElementsByClassName("home-content")[0];
       const col12 = DOMEditor.getChildElementsByClassName(DOMEditor.getChildElementsByClassName(homeContent, "row")[0], "col-12")[0];
 
       const favoriteAvatarListDOM = DOMEditor.createCollapseRowList("Favorite Avatars", "row");
+      favoriteAvatarListDOM.parent.id = "vrchat_plus_favorite_avatars_list";
       col12.appendChild(favoriteAvatarListDOM.parent);
 
       favoriteAvatarListDOM.parent.style.display = "none";
@@ -757,7 +761,6 @@ window.onload = function () {
 
   const bodyObserver = new MutationObserver((mutations) => {
     mutations.forEach(() => {
-      avatarsFunction();
       const homeContent = document.getElementsByClassName("home-content")[0];
       const homeContentObserver = new MutationObserver(() => {
         clearInterval(IntervalID.avatarsInterval);
