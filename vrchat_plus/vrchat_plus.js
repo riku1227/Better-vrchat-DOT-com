@@ -467,28 +467,30 @@ window.onload = function () {
   const avatarsFunction = function () {
     if (location.href.indexOf("home/avatars") != -1) {
 
-      const intervalAvatar = function () {
-        const privateContainers = document.getElementsByClassName("private");
-        for (let i = 0; i < privateContainers.length; i++) {
-          const privateContainer = privateContainers[i];
-          privateContainer.classList.remove("private");
+      if(IntervalID.avatarsInterval == 0) {
+        const intervalAvatar = function () {
+          const privateContainers = document.getElementsByClassName("private");
+          for (let i = 0; i < privateContainers.length; i++) {
+            const privateContainer = privateContainers[i];
+            privateContainer.classList.remove("private");
+  
+  
+            const privateAvatarContent = DOMEditor.getChildElementsByClassName(privateContainer.firstElementChild, "col-md-8");
+            const buttonDOM = DOMEditor.createButton("Set Avatar", ["fas", "fa-user-tie"], "Set Avatar");
+            buttonDOM.addEventListener("click", () => {
+              const avatarId = VRChatAPI.removeVRChatComURL(
+                DOMEditor.getChildElementsByTagName(privateAvatarContent[0], "h4")[0].firstChild.href
+              ).replace("avatar/", "");
+              VRChatAPI.setAvatar(avatarId);
+            });
+            privateAvatarContent[0].appendChild(buttonDOM);
+          }
+        };
+  
+        IntervalID.avatarsInterval = setInterval(intervalAvatar, 1500);
+      }
 
-
-          const privateAvatarContent = DOMEditor.getChildElementsByClassName(privateContainer.firstElementChild, "col-md-8");
-          const buttonDOM = DOMEditor.createButton("Set Avatar", ["fas", "fa-user-tie"], "Set Avatar");
-          buttonDOM.addEventListener("click", () => {
-            const avatarId = VRChatAPI.removeVRChatComURL(
-              DOMEditor.getChildElementsByTagName(privateAvatarContent[0], "h4")[0].firstChild.href
-            ).replace("avatar/", "");
-            VRChatAPI.setAvatar(avatarId);
-          });
-          privateAvatarContent[0].appendChild(buttonDOM);
-        }
-      };
-
-      IntervalID.avatarsInterval = setInterval(intervalAvatar, 1500);
-
-      if(document.getElementById("vrchat_plus_favorite_avatars_list") != undefined) {
+      if (document.getElementById("vrchat_plus_favorite_avatars_list") != undefined) {
         return;
       }
       const homeContent = document.getElementsByClassName("home-content")[0];
@@ -571,7 +573,7 @@ window.onload = function () {
       });
 
       unFavAllAvatarButton.addEventListener("click", () => {
-        if(window.confirm("お気に入り登録されているアバターをすべてお気に入り解除します、本当によろしいですか？")) {
+        if (window.confirm("お気に入り登録されているアバターをすべてお気に入り解除します、本当によろしいですか？")) {
           VRChatAPI.getFavoriteAvatarIDs().then((request) => {
             const currentFavoriteIds = JSON.parse(request.response);
             const promises = [];
@@ -587,7 +589,7 @@ window.onload = function () {
             }
             alert("すべてのお気に入りに登録されたアバターをお気に入り解除しました");
           });
-        } 
+        }
       });
 
       favoriteAvatarListDOM.list.appendChild(addFavoriteAvatarForm.parent);
@@ -645,7 +647,7 @@ window.onload = function () {
       favoriteAvatarListDOM.list.appendChild(importButton);
       importButton.addEventListener("click", () => {
         const jsonFiles = importInput.files;
-        if(jsonFiles.length == 0) {
+        if (jsonFiles.length == 0) {
           return;
         }
         let fapObject = {};
@@ -680,7 +682,7 @@ window.onload = function () {
           });
           return Promise.all(promises);
         }).then((requests) => {
-          if(requests == "isError") {
+          if (requests == "isError") {
             return;
           }
           const removeFavoriteContainer = document.getElementsByClassName("vrchat_plus_favorite_avatars_container");
@@ -688,20 +690,20 @@ window.onload = function () {
           for (let i = 0; i < removeFavoriteContainerSize; i++) {
             removeFavoriteContainer[0].remove();
           }
-          
+
           const importPromise = []
           fapObject.avatars.forEach((value) => {
             importPromise.push(VRChatAPI.addFavoriteAvatar(value));
           });
           return Promise.all(importPromise);
         }).then((requests) => {
-          if(requests == undefined) {
+          if (requests == undefined) {
             return;
           }
           const requestsSize = requests.length;
           let requestsCount = 0;
           requests.forEach((value) => {
-            if(value.status == 200) {
+            if (value.status == 200) {
               const addFavoriteResult = JSON.parse(value.response);
               VRChatAPI.getAvatar(addFavoriteResult.favoriteId).then((request) => {
                 requestsCount++;
@@ -710,7 +712,7 @@ window.onload = function () {
                 avatarContainer.classList.add("vrchat_plus_favorite_avatars_container");
                 favoriteAvatarListDOM.list.appendChild(avatarContainer);
 
-                if(requestsCount >= requestsSize) {
+                if (requestsCount >= requestsSize) {
                   alert("インポート完了！");
                 }
               });
@@ -757,24 +759,12 @@ window.onload = function () {
     }
   };
 
-  const bodyContent = document.getElementById("home");
-
-  const bodyObserver = new MutationObserver((mutations) => {
-    mutations.forEach(() => {
-      const homeContent = document.getElementsByClassName("home-content")[0];
-      const homeContentObserver = new MutationObserver(() => {
-        clearInterval(IntervalID.avatarsInterval);
-
-        avatarsFunction();
-      });
-
-      homeContentObserver.observe(homeContent, {
-        childList: true
-      });
-    });
-  });
-
-  bodyObserver.observe(bodyContent, {
-    childList: true
-  });
+  setInterval(() => {
+    if (location.href.indexOf("home/avatars") != -1) {
+      avatarsFunction();
+    } else {
+      clearInterval(IntervalID.avatarsInterval);
+      IntervalID.avatarsInterval = 0;
+    }
+  }, 1500);
 };
