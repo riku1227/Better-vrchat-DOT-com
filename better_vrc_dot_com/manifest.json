@@ -1,0 +1,33 @@
+{
+    "manifest_version": 2,
+    "name": "Better vrchat DOT com",
+    "version": "1.3.0",
+    "description": "VRChat公式サイトをちょっと便利にする拡張機能",
+    "icons": {
+        "16": "icon_16.png",
+        "48": "icon_48.png",
+        "128": "icon_128.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://vrchat.com/home/*",
+                "https://www.vrchat.com/home/*"
+            ],
+            "css": [
+                "css/style.css"
+            ],
+            "js": [
+                "src/data/interval_ids.js",
+                "src/util/util.js",
+                "src/util/vrc_util.js",
+                "src/api/vrchat_api.js",
+                "src/dom/dom.js",
+                "src/dom/vrc_dom.js",
+                "src/features/better_location_card.js",
+                "src/features/better_avatars.js",
+                "src/better_vrc_dot_com.js"
+            ]
+        }
+    ]
+}
