@@ -514,10 +514,6 @@ window.onload = function () {
       messageP.style.marginLeft = "16px";
       messageP.style.whiteSpace = "pre-wrap";
 
-      const unFavAllAvatarButton = DOMEditor.createButton("Unfav All Avatar", ["fas", "fa-fire-alt"], "Unfav All Avatar");
-      unFavAllAvatarButton.style.marginRight = "calc(100% - 216px)";
-      unFavAllAvatarButton.style.marginLeft = "16px";
-
       addFavoriteAvatarForm.button.addEventListener("click", () => {
         const avatarIdRegex = /avtr_[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/
         const formValue = addFavoriteAvatarForm.input.value;
@@ -572,29 +568,8 @@ window.onload = function () {
         }
       });
 
-      unFavAllAvatarButton.addEventListener("click", () => {
-        if (window.confirm("お気に入り登録されているアバターをすべてお気に入り解除します、本当によろしいですか？")) {
-          VRChatAPI.getFavoriteAvatarIDs().then((request) => {
-            const currentFavoriteIds = JSON.parse(request.response);
-            const promises = [];
-            currentFavoriteIds.forEach((value) => {
-              promises.push(VRChatAPI.deleteFavorite(value.id));
-            });
-            return Promise.all(promises);
-          }).then((requests) => {
-            const removeFavoriteContainer = document.getElementsByClassName("vrchat_plus_favorite_avatars_container");
-            const removeFavoriteContainerSize = removeFavoriteContainer.length;
-            for (let i = 0; i < removeFavoriteContainerSize; i++) {
-              removeFavoriteContainer[0].remove();
-            }
-            alert("すべてのお気に入りに登録されたアバターをお気に入り解除しました");
-          });
-        }
-      });
-
       favoriteAvatarListDOM.list.appendChild(addFavoriteAvatarForm.parent);
       favoriteAvatarListDOM.list.appendChild(messageP);
-      favoriteAvatarListDOM.list.appendChild(unFavAllAvatarButton);
 
       const favoriteAvatarsMap = new Map();
 
