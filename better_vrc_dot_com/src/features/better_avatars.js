@@ -155,7 +155,7 @@ class BetterAvatars {
                         const avatarContainer = VRCDOM.createAvatarContainer(avatarObject.name, avatarObject.description, avatarObject.thumbnailImageUrl, avatarObject.id);
                         this.addSetAvatarButton(avatarContainer);
                         this.addCopyAvatarIDButton(avatarContainer);
-                        this.addUnFavoriteAvatarButton(avatarContainer);
+                        this.addUnFavoriteAvatarButton(avatarContainer, favoriteId);
 
                         listDiv.insertBefore(avatarContainer, avatarContainerPrevElement.nextSibling);
                     });
