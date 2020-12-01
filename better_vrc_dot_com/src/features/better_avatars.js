@@ -128,10 +128,15 @@ class BetterAvatars {
                     break;
                     case 400:
                         const errorJson = JSON.parse(request.response);
-                        if (errorJson.error.message == "You already have that avatar favorited") {
-                            resultMessage = `これ以上アバターをお気に入りに登録することはできません`;
-                        } else {
-                            resultMessage = `原因不明のエラーが発生しました\n[Status Code: ${request.status}]: ${request.response}`;
+                        switch(errorJson.error.message) {
+                            case "You already have 25 favorite avatars in group 'avatars1'":
+                                resultMessage = `"avatars1" グループには既に25アバターが登録されています`;
+                            break;
+                            case "You already have that avatar favorited":
+                                resultMessage = `既にそのアバターはお気に入りに登録されています`;
+                            break;
+                            default:
+                                resultMessage = `原因不明のエラーが発生しました\n[Status Code: ${request.status}]: ${request.response}`;
                         }
                     break;
                     default:
