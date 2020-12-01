@@ -50,10 +50,11 @@ class BetterAvatars {
 
     static addUnFavoriteAvatarButton(avatarContainer, favoriteId) {
         const avatarRightContainer = this.getAvatarRightContainer(avatarContainer);
+        const avatarName = avatarRightContainer.getElementsByTagName("h4")[0].textContent;
         const buttonDOM = VRCDOM.createButton("Unfav Avatar", ["fas", "fa-user-minus"]);
 
         buttonDOM.addEventListener("click", () => {
-            if (window.confirm("アバターのFavoriteを解除しますか？\nUnfav avatar?")) {
+            if (window.confirm(`アバター 「${avatarName}」 のお気に入り登録を解除しますか？\n\nUnfavorite this( ${avatarName} ) avatar?`)) {
                 VRChatAPI.deleteFavorite(favoriteId).then((request) => {
                     avatarContainer.remove();
                 });
