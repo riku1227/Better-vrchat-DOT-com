@@ -165,15 +165,28 @@ class BetterAvatars {
         });
     }
 
+    //FAPSystemコンテキストで実行されるからthisではなくBetterAvatarsって書く
+    //なんだこのクソコード
     static addFAPAvatarContainer(fapAvatars, fapContainer) {
+        const continerDivID = "fap_avatar_container_div"
+
+        const oldContainer = DOM.getById(continerDivID);
+        if(oldContainer) {
+            oldContainer.remove();
+        }
+        
+        const containerDiv = DOM.createDiv();
+        containerDiv.style.width = "100%";
+        containerDiv.id = continerDivID;
         for(let i = 0; i < fapAvatars.length; i++) {
             const fapAvatar = fapAvatars[i];
             const fapAvatarContainer = VRCDOM.createAvatarContainerWithAvatarObject(fapAvatar);
 
             BetterAvatars.addSetAvatarButton(fapAvatarContainer);
             BetterAvatars.addCopyAvatarIDButton(fapAvatarContainer);
-            fapContainer.list.appendChild(fapAvatarContainer);
+            containerDiv.appendChild(fapAvatarContainer);
         }
+        fapContainer.list.appendChild(containerDiv);
     }
 
     static setupPrivateContainer() {
