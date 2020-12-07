@@ -50,6 +50,13 @@ class FAPSystem {
 
     addInputFileForm () {
         const list = this.fapContainer.list;
+        
+        const fapLink = DOM.createA();
+        fapLink.textContent = "FAPSystemの機能が削除/変更された理由";
+        fapLink.href = "https://github.com/riku1227/Better-vrchat-DOT-com/blob/files/fapsystem.md";
+        fapLink.style.marginLeft = "16px"
+        list.appendChild(fapLink);
+
         const explanationText = DOM.createP();
         explanationText.textContent = `FAPファイルを読み込んでプリセットに登録されているアバター一覧を表示することができます。`;
         explanationText.style.marginLeft = "16px";
