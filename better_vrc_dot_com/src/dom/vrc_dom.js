@@ -83,6 +83,7 @@ class VRCDOM {
 
         parentDiv.appendChild(parentH3);
         parentDiv.appendChild(collapseDiv);
+        parentDiv.appendChild(DOM.createElement("hr"));
 
         return {
             parent: parentDiv,
