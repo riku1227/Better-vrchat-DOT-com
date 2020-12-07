@@ -20,4 +20,14 @@ class Util {
         const nowDate = new Date();
         return `[${nowDate.getHours()}:${nowDate.getMinutes()}:${nowDate.getSeconds()}]`;
     }
+
+    static readFileAsText(file) {
+        return new Promise((callback) => {
+            const fileReader = new FileReader();
+            fileReader.readAsText(file);
+            fileReader.onload = function () {
+                callback(fileReader.result);
+            }
+        });
+    }
 }

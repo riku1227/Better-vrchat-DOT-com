@@ -144,6 +144,10 @@ class VRCDOM {
         return parentDiv;
     }
 
+    static createAvatarContainerWithAvatarObject(avatarObject) {
+        return this.createAvatarContainer(avatarObject.name, avatarObject.description, avatarObject.thumbnailImageUrl, avatarObject.id);
+    }
+
     static createTextInputForm(inputId, placeholder, buttonIconClassList) {
         const parentDiv = DOM.createDiv();
         parentDiv.classList.add("input-group");

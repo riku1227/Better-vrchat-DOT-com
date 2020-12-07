@@ -165,6 +165,17 @@ class BetterAvatars {
         });
     }
 
+    static addFAPAvatarContainer(fapAvatars, fapContainer) {
+        for(let i = 0; i < fapAvatars.length; i++) {
+            const fapAvatar = fapAvatars[i];
+            const fapAvatarContainer = VRCDOM.createAvatarContainerWithAvatarObject(fapAvatar);
+
+            BetterAvatars.addSetAvatarButton(fapAvatarContainer);
+            BetterAvatars.addCopyAvatarIDButton(fapAvatarContainer);
+            fapContainer.list.appendChild(fapAvatarContainer);
+        }
+    }
+
     static setupPrivateContainer() {
         const privateContainers = DOM.getByClass("private");
         for(let i = 0; i < privateContainers.length; i++) {
@@ -228,6 +239,9 @@ class BetterAvatars {
 
                 favoriteAvatarsCollapse.parent.style.display = "block";
             }
+
+            const fapSystem = new FAPSystem(col12, this.addFAPAvatarContainer);
+            fapSystem.setupFAPContainer();
         }
     }
 

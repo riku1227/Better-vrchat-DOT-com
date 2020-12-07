@@ -25,6 +25,7 @@
                 "src/dom/dom.js",
                 "src/dom/vrc_dom.js",
                 "src/features/better_location_card.js",
+                "src/features/fap_system.js",
                 "src/features/better_avatars.js",
                 "src/better_vrc_dot_com.js"
             ]
