@@ -14,11 +14,7 @@
                 "https://vrchat.com/home/*",
                 "https://www.vrchat.com/home/*"
             ],
-            "css": [
-                "css/style.css"
-            ],
             "js": [
-                "src/data/interval_ids.js",
                 "src/util/util.js",
                 "src/util/vrc_util.js",
                 "src/api/vrchat_api.js",
@@ -26,8 +22,6 @@
                 "src/dom/vrc_dom.js",
                 "src/dom/vrc/vrc_location_card.js",
                 "src/features/better_location_card.js",
-                "src/features/fap_system.js",
-                "src/features/better_avatars.js",
                 "src/better_vrc_dot_com.js"
             ]
         }
