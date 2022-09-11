@@ -1,120 +1,91 @@
+//@ts-check
+
 class BetterLocationCard {
+    //"Join Friends"タブのロケーションカードリストの親Divのクラス名
+    static locationsDivClassName = "locations";
 
-    static classReplaceTitle = "better_vrc_dot_com_location_title";
-    static classUserCountBadge = "better_vrc_dot_com_user_count";
-    static classInviteMEButton = "better_vrc_dot_com_invite_me_button";
-    static classReLoadButton = "better_vrc_dot_com_reload_instance_user_count";
+    static friendsCountPClass = "better_vrc_dot_com_location_friends_count_p";
+    static instanceUserCountBadgeClass = "better_vrc_dot_com_instance_user_count_badge";
 
-    static instanceInfoCache = new Map();
-    static reloadButtonTimer = 0;
+    static fasHouseUserPath = "M576 287.6H511.8l1 224.4H64.1V287.6H0V240L288.4 0 576 240v47.6zM352 224c0-35.3-28.7-64-64-64s-64 28.7-64 64s28.7 64 64 64s64-28.7 64-64zm48 192l-32-96H208l-32 96H400z";
+    static fasHouseUserViewBox = "0 0 576 512";
 
-    static getInstanceUrlFromCard(locationCardElement) {
-        return locationCardElement.getElementsByTagName("a")[0].href;
-    }
-    
-    static addInstanceUserCount (locationTitleElement, userCount) {
-        const userCountSpan = VRCDOM.createIconBadge(["fa", "fa-user-circle"], userCount, "Number of users in instance");
-        userCountSpan.classList.add(this.classUserCountBadge);
-        const spaceSpan = VRCDOM.createSpaceSpan();
+    static instanceUserBadgeRegex = /([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|Click)<svg/g;
 
-        const friendCountSpan = locationTitleElement.getElementsByTagName("span")[0];
-        locationTitleElement.insertBefore(spaceSpan, friendCountSpan);
-        locationTitleElement.insertBefore(userCountSpan, spaceSpan);
+    /**
+     * ロケーションカードにインスタンス人数を表示するバッジが存在するかどうか
+     * @param {VRCLocationCard} locationCard 
+     */
+    static existsInstanceUserCountBadge(locationCard) {
+        const htmlCollection = locationCard.instanceInfoListElement.getElementsByClassName(this.instanceUserCountBadgeClass);
+        return htmlCollection.length > 0;
     }
 
-    static setupInstanceUserCount (locationTitle, worldId, instanceId) {
-        const cacheName = `${worldId}:${instanceId}`;
-        if(this.instanceInfoCache[cacheName] != undefined) {
-            this.addInstanceUserCount(locationTitle, this.instanceInfoCache[cacheName]);
-        } else {
-            VRChatAPI.getWorldInstanceByID(worldId, instanceId).then((request) => {
-                const resultObject = JSON.parse(request.response);
-                const userCount = resultObject.n_users;
-                this.instanceInfoCache[cacheName] = userCount;
+    /**
+     * インスタンスの情報を取得する
+     * @param {VRCLocationCard} locationCard 
+     * @return Promise
+     */
+    static getInstanceWorld(locationCard) {
+        const instanceWorldURL = locationCard.instanceURL;
+        const worldId = VRCUtil.getWorldIDFromURL(instanceWorldURL);
+        const instanceId = VRCUtil.getInstanceIDFromURL(instanceWorldURL);
 
-                this.addInstanceUserCount(locationTitle, userCount);
+        return VRChatAPI.getWorldInstanceByID(worldId, instanceId);
+    }
+
+    /**
+     * インスタンスに居るユーザー数を表示するバッジを追加する
+     * @param {VRCLocationCard} locationCard 
+     */
+    static addInstanceUserCountBadge(locationCard) {
+        if(!this.existsInstanceUserCountBadge(locationCard)) {
+            const instanceUserIcon = VRCDOM.createSVGIcon("Number of users in the Instance", this.fasHouseUserPath, "#8f8f8d", this.fasHouseUserViewBox);
+            const instanceUserCountBadge = VRCDOM.createIconBadge(instanceUserIcon, "Click");
+            DOM.addClassList(instanceUserCountBadge, [ this.instanceUserCountBadgeClass ]);
+
+            //Invite Meボタンの左にバッジを設置する
+            locationCard.instanceInfoListElement.insertBefore(
+                instanceUserCountBadge,
+                locationCard.instanceInfoListElement.lastChild
+            );
+
+            instanceUserCountBadge.addEventListener("click", () => {
+                this.updateInstanceUserCountBadge(locationCard);
             });
         }
     }
 
-    static setupInviteMEButton(locationCardElement) {
-        if(locationCardElement.getElementsByClassName(this.classInviteMEButton).length <= 0) {
-            const clearFixDiv = locationCardElement.getElementsByClassName("clearfix")[0];
+    /**
+     * 
+     * @param {VRCLocationCard} locationCard 
+     */
+    static updateInstanceUserCountBadge(locationCard) {
+        if(this.existsInstanceUserCountBadge(locationCard)) {
+            this.getInstanceWorld(locationCard).then((request) => {
+                const result = JSON.parse(request.response);
 
-            const inviteMEButton = VRCDOM.createButton("INVITE ME");
-            inviteMEButton.classList.add(this.classInviteMEButton);
-
-            const instanceUrl = this.getInstanceUrlFromCard(locationCardElement);
-            const worldId = VRCUtil.getWorldIDFromURL(instanceUrl);
-            const instanceId = VRCUtil.getInstanceIDFromURL(instanceUrl);
-
-            locationCardElement.firstChild.insertBefore(inviteMEButton, clearFixDiv);
-
-            inviteMEButton.addEventListener("click", () => {
-                VRChatAPI.postInviteToME(worldId, instanceId);
-            })
-        }
-    }
-
-    static setupReLoadButton(locationCardElement) {
-        if(locationCardElement.getElementsByClassName(this.classReLoadButton).length <= 0) {
-            const inviteMEButton = locationCardElement.getElementsByClassName(this.classInviteMEButton)[0];
-
-            const reloadButton = VRCDOM.createButton("", ["fas", "fa-sync-alt"], "Reload number of users in instance");
-            reloadButton.classList.add(this.classReLoadButton);
-
-            locationCardElement.firstChild.insertBefore(reloadButton, inviteMEButton);
-
-            const spaceSpan = VRCDOM.createSpaceSpan();
-            locationCardElement.firstChild.insertBefore(spaceSpan, reloadButton.nextElementSibling);
-            
-            const instanceUrl = this.getInstanceUrlFromCard(locationCardElement);
-            const worldId = VRCUtil.getWorldIDFromURL(instanceUrl);
-            const instanceId = VRCUtil.getInstanceIDFromURL(instanceUrl);
-
-            reloadButton.addEventListener("click", () => {
-                if(this.reloadButtonTimer >= 1) {
-                    this.reloadButtonTimer = 0;
-
-                    VRChatAPI.getWorldInstanceByID(worldId, instanceId).then((request) => {
-                        const cacheName = `${worldId}:${instanceId}`;
-                        const resultObject = JSON.parse(request.response);
-                        const userCount = resultObject.n_users;
-                        this.instanceInfoCache[cacheName] = userCount;
-
-                        const countSpan = locationCardElement.getElementsByClassName(this.classUserCountBadge)[0];
-                        countSpan.parentNode.removeChild(countSpan);
-
-                        this.addInstanceUserCount(locationCardElement.getElementsByClassName(this.classReplaceTitle)[0], userCount);
-                    })
-                }
+                const instanceUserCountBadge = locationCard.instanceInfoListElement.getElementsByClassName(this.instanceUserCountBadgeClass)[0];
+                console.log(instanceUserCountBadge.innerHTML);
+                instanceUserCountBadge.innerHTML = instanceUserCountBadge.innerHTML.replace(this.instanceUserBadgeRegex, result.n_users + "<svg");
+                console.log(result);
             });
         }
     }
 
-    static setupLocationCard () {
-        this.reloadButtonTimer++;
-        const locationCards = DOM.getByClass("location-card");
+    /**
+     * ベターロケーションカードのセットアップを行う
+     * ベターロケーションカードを使うにはこの処理を実行するればいい
+     */
+    static setupBetterLocationCard() {
+        //ロケーションカードをすべて取得する
+        const locationCards = DOM.getByClass(this.locationsDivClassName)[0].children;
+        //forで回す
         for(let i = 0; i < locationCards.length; i++) {
-            const locationCard = locationCards[i];
-            const locationTitle = locationCard.getElementsByClassName("location-title")[0];
-
-            if(locationTitle) {
-                locationTitle.classList.remove("location-title");
-                locationTitle.classList.add(this.classReplaceTitle);
-
-                const locationTitleA = locationTitle.getElementsByTagName("a")[0];
-                locationTitleA.classList.add("better_vrc_dot_com_location_title_a");
-
-                const instanceUrl = locationTitleA.href;
-                const worldId = VRCUtil.getWorldIDFromURL(instanceUrl)
-                const instanceId = VRCUtil.getInstanceIDFromURL(instanceUrl)
-
-                this.setupInstanceUserCount(locationTitle, worldId, instanceId);
-            }
-
-            this.setupInviteMEButton(locationCard);
-            this.setupReLoadButton(locationCard);
+            //ロケーションカードインスタンスを作成
+            const locationCard = new VRCLocationCard(locationCards[i]);
+            //インスタンスに居るユーザー数バッジを追加する
+            this.addInstanceUserCountBadge(locationCard);
         }
     }
-};
+}

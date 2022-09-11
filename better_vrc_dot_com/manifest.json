@@ -24,6 +24,7 @@
                 "src/api/vrchat_api.js",
                 "src/dom/dom.js",
                 "src/dom/vrc_dom.js",
+                "src/dom/vrc/vrc_location_card.js",
                 "src/features/better_location_card.js",
                 "src/features/fap_system.js",
                 "src/features/better_avatars.js",
