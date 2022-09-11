@@ -92,9 +92,7 @@ class BetterLocationCard {
                 const result = JSON.parse(request.response);
 
                 const instanceUserCountBadge = locationCard.instanceInfoListElement.getElementsByClassName(this.instanceUserCountBadgeClass)[0];
-                console.log(instanceUserCountBadge.innerHTML);
                 instanceUserCountBadge.innerHTML = instanceUserCountBadge.innerHTML.replace(this.instanceUserBadgeRegex, result.n_users + "<svg");
-                console.log(result);
             });
         }
     }
