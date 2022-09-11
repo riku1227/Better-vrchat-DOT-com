@@ -90,4 +90,11 @@ class VRCLocationCard {
     get instanceFriendsCount() {
         return this.instanceFriendsListElement.children.length;
     }
+
+    /**
+     * Invite MEボタンを取得する
+     */
+    get inviteMEButton() {
+        return this.cardElement.querySelector(`[aria-label="Invite Me"]`);
+    }
 }

@@ -116,7 +116,7 @@ class BetterLocationCard {
                     this.updateCoolTime = 0;
                 }
              });
-            DOM.addClassList(updateButton, [ "me-sm-2", this.instanceUserCountUpdateButtonClass ]);
+            DOM.addClassList(updateButton, [ "me-sm-2", "flex-grow-0", this.instanceUserCountUpdateButtonClass ]);
 
             //Invite Meボタンの左にバッジを設置する
             locationCard.instanceInfoListElement.insertBefore(
@@ -124,6 +124,15 @@ class BetterLocationCard {
                 locationCard.instanceInfoListElement.lastChild
             );
         }
+    }
+
+    /**
+     * 
+     * @param {VRCLocationCard} locationCard 
+     */
+    static setupInstanceInfoLayout(locationCard) {
+        DOM.addClassList(locationCard.instanceInfoListElement, ["flex-wrap", "align-content-end"]);
+        DOM.addClassList(locationCard.inviteMEButton, ["mt-2"]);
     }
 
     /**
@@ -144,6 +153,7 @@ class BetterLocationCard {
         for(let i = 0; i < locationCards.length; i++) {
             //ロケーションカードインスタンスを作成
             const locationCard = new VRCLocationCard(locationCards[i]);
+            this.setupInstanceInfoLayout(locationCard);
             //インスタンスに居るユーザー数バッジを追加する
             this.addInstanceUserCountBadge(locationCard);
         }
