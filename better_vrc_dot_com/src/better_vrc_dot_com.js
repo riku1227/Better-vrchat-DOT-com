@@ -12,5 +12,5 @@ const intervalFunction = () => {
 }
 
 window.addEventListener("load", () => {
-    setInterval(intervalFunction, 3000);
+    setInterval(intervalFunction, 500);
 }, false);
