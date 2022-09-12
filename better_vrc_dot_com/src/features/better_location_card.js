@@ -54,14 +54,27 @@ class BetterLocationCard {
     }
 
     /**
+     * インスタンスのユーザー数を表示するバッジを生成する
+     * @param {String} content 
+     */
+    static createInstanceUserBadge(content) {
+        //アイコンのSVG要素を生成
+        const instanceUserIcon = VRCDOM.createSVGIcon("Number of users in the Instance", this.fasHouseUserPath, "#8f8f8d", this.fasHouseUserViewBox);
+        //バッジを生成
+        const instanceUserCountBadge = VRCDOM.createIconBadge(instanceUserIcon, content);
+        //必要なクラスを追加
+        DOM.addClassList(instanceUserCountBadge, [ this.instanceUserCountBadgeClass ]);
+
+        return instanceUserCountBadge;
+    }
+
+    /**
      * インスタンスに居るユーザー数を表示するバッジを追加する
      * @param {VRCLocationCard} locationCard 
      */
     static addInstanceUserCountBadge(locationCard) {
         if(!this.existsInstanceUserCountBadge(locationCard)) {
-            const instanceUserIcon = VRCDOM.createSVGIcon("Number of users in the Instance", this.fasHouseUserPath, "#8f8f8d", this.fasHouseUserViewBox);
-            const instanceUserCountBadge = VRCDOM.createIconBadge(instanceUserIcon, "Click");
-            DOM.addClassList(instanceUserCountBadge, [ this.instanceUserCountBadgeClass ]);
+            const instanceUserCountBadge = this.createInstanceUserBadge("Click");
 
             //Invite Meボタンの左にバッジを設置する
             locationCard.instanceInfoListElement.insertBefore(
@@ -93,7 +106,14 @@ class BetterLocationCard {
 
                 const instanceUserCountBadge = locationCard.instanceInfoListElement.getElementsByClassName(this.instanceUserCountBadgeClass)[0];
                 //instanceUserCountBadge.textContent = instanceUserCountBadge.innerHTML.replace(this.instanceUserBadgeRegex, result.n_users + "<svg");
-                instanceUserCountBadge.textContent = "12";
+
+                /**
+                 * innerHtml使ったらFirefoxに怒られたから使わないために新しくバッジを作って入れ替える
+                 * まあ要素を一個作るくらいのコスト今の時代どうでもいいでしょう...
+                 */
+
+                const newInstanceUserCountBadge = this.createInstanceUserBadge(result.n_users);
+                instanceUserCountBadge.replaceWith(newInstanceUserCountBadge);
             });
         }
     }

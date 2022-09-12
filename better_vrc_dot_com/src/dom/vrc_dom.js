@@ -21,7 +21,7 @@ class VRCDOM {
          * ナレーターとかが多分読むので大事 (拡張機能で追加した要素をちゃんと読むのかはわからない...)
          *  */ 
         const svgTitle = document.createElement("title");
-        svgTitle.innerHTML = title;
+        svgTitle.textContent = title;
 
         //SVGアイコンの中身であるPath要素を作成
         const svgPath = document.createElementNS("http://www.w3.org/2000/svg","path");
