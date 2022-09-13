@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Better vrchat DOT com",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "VRChat公式サイトをちょっと便利にする拡張機能",
     "icons": {
         "16": "icon_16.png",
@@ -11,6 +11,8 @@
     "content_scripts": [
         {
             "matches": [
+                "https://vrchat.com/home",
+                "https://www.vrchat.com/home",
                 "https://vrchat.com/home/*",
                 "https://www.vrchat.com/home/*"
             ],
