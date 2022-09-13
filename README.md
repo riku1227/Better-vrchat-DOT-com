@@ -3,7 +3,7 @@
   <img src="better_vrc_dot_com/icon_128.png">
 </p>
 <p align="center" style="font-size:28px; margin: 2px;">Better vrchat DOT com</p>  
-<p align="center">~ VRChat公式サイトをちょっと便利にするChrome向け拡張機能 ~</p>
+<p align="center">~ VRChat公式サイトをちょっと便利にするブラウザ拡張機能 ~</p>
 <p align="center">
 <a href="https://chrome.google.com/webstore/detail/better-vrchat-dot-com/joaffhoebddkohkafembmdkfmmcgmepj?hl=ja"><img alt="Chrome Web Store" src="https://img.shields.io/chrome-web-store/v/joaffhoebddkohkafembmdkfmmcgmepj?color=%2382c91e&style=for-the-badge"></a>
 <a href="https://addons.mozilla.org/ja/firefox/addon/better-vrchat-dot-com/"><img style="margin-left:12px" alt="Mozilla Add-on" src="https://img.shields.io/amo/v/better-vrchat-dot-com?color=%23fd7e14&style=for-the-badge"></a>
@@ -30,6 +30,8 @@ VRChat APIを使用するため、Cookieに保存されているトークン(認
 
 
 # 📄 更新履歴 
+### 2.0.1 (Firefox限定)
+* URLが「vrchat[.]com/home」の時動作しない不具合を修正
 ### 2.0.0
 * 最新(2022/09/11現在)のウェブサイトに対応
 * FAPシステムの機能を削除しました
