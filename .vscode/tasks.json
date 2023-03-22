@@ -24,7 +24,12 @@
 			"dependsOrder": "sequence",
 			"dependsOn": [
 				"bundle"
-			]
+			],
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
 		}
 	]
 }
