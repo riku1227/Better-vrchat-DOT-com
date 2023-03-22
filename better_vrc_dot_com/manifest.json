@@ -1,12 +1,17 @@
 {
     "manifest_version": 3,
     "name": "Better vrchat DOT com",
-    "version": "2.0.1",
+    "version": "2.1.0",
     "description": "VRChat公式サイトをちょっと便利にする拡張機能",
     "icons": {
         "16": "icon_16.png",
         "48": "icon_48.png",
         "128": "icon_128.png"
+    },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "{117dc356-01d2-455d-8c27-68115c839ae9}"
+        }
     },
     "content_scripts": [
         {
