@@ -62,7 +62,7 @@ export class VRCDOM {
     static createButton(label: string, onClick: (event: MouseEvent) => void): HTMLButtonElement {
         const button = document.createElement("button");
         //ボタンをボタンたらしめるクラスを追加
-        DOMUtil.addClassList(button, ["align-self-end", "css-21vcfd"]);
+        DOMUtil.addClassList(button, ["align-self-end", "css-17kndqb"]);
         //ボタンのテキストを設定
         button.textContent = label;
         //クリックイベントを設定
@@ -80,7 +80,9 @@ export class VRCDOM {
     static createIconButton(svgIcon: SVGSVGElement, onClick: (event: MouseEvent) => void): HTMLButtonElement {
         const button = document.createElement("button");
         //ボタンをボタンたらしめるクラスを追加
-        DOMUtil.addClassList(button, ["align-self-end", "css-21vcfd"]);
+        DOMUtil.addClassList(button, ["align-self-end", "css-17kndqb"]);
+        //ボタンが横幅いっぱいに拡大されないようにする
+        button.style.flex = "none !important";
         //中身のアイコンにマージンを追加
         DOMUtil.addClassList(svgIcon, ["mx-1"]);
         //ボタンにアイコンを追加
