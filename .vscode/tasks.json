@@ -1,0 +1,30 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "typescript",
+			"tsconfig": "better_vrc_dot_com/tsconfig.json",
+			"problemMatcher": [],
+			"group": "build",
+			"label": "tsc: build - better_vrc_dot_com/tsconfig.json"
+		},
+		{
+			"type": "shell",
+			"command": "npx rollup --config rollup.config.mjs",
+			"label": "bundle",
+			"dependsOrder": "sequence",
+			"dependsOn": [
+				"tsc: build - better_vrc_dot_com/tsconfig.json"
+			]
+		},
+		{
+			"type": "shell",
+			"command": "Copy-Item better_vrc_dot_com\\*.png better_vrc_dot_com\\dist;Copy-Item better_vrc_dot_com\\manifest.json better_vrc_dot_com\\dist",
+			"label": "copy file",
+			"dependsOrder": "sequence",
+			"dependsOn": [
+				"bundle"
+			]
+		}
+	]
+}

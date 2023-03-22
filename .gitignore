@@ -1,1 +1,4 @@
 /dist
+better_vrc_dot_com/build/
+better_vrc_dot_com/dist/
+node_modules/

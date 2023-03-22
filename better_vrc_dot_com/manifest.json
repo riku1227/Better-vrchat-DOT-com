@@ -17,14 +17,7 @@
                 "https://www.vrchat.com/home/*"
             ],
             "js": [
-                "src/util/util.js",
-                "src/util/vrc_util.js",
-                "src/api/vrchat_api.js",
-                "src/dom/dom.js",
-                "src/dom/vrc_dom.js",
-                "src/dom/vrc/vrc_location_card.js",
-                "src/features/better_location_card.js",
-                "src/better_vrc_dot_com.js"
+                "index.js"
             ]
         }
     ]
