@@ -92,4 +92,39 @@ export class VRCDOM {
 
         return button;
     }
+
+    /**
+     * PCだと左に、モバイルだとナビゲーションドロワーの中にあるナビゲーションボタンを生成する
+     * @param label 
+     * @param onClick 
+     */
+    static createNavigationButton(argObj: {
+        label: string,
+        id: string,
+        icon?: Element,
+        onClick: (event: MouseEvent) => void
+    }): HTMLAnchorElement {
+        const navigationButton = document.createElement("a");
+        DOMUtil.addClassList(navigationButton, ["btn", "css-ayw38j"]);
+        navigationButton.id = argObj.id;
+
+        if (argObj.icon) {
+            navigationButton.appendChild(argObj.icon);
+        }
+
+        const buttonLabel = document.createElement("div");
+        buttonLabel.textContent = argObj.label;
+        navigationButton.appendChild(buttonLabel);
+
+        //Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.
+        const fasAngleRightPath = "M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z";
+        const fasAngleRightViewBox = "0 0 320 512";
+
+        const arrowIcon = VRCDOM.createSVGIcon("Arrow", fasAngleRightPath, "currentColor", fasAngleRightViewBox);
+        navigationButton.appendChild(arrowIcon);
+
+        navigationButton.addEventListener("click", (event) => { argObj.onClick(event) });
+
+        return navigationButton;
+    }
 }
