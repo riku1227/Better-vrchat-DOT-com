@@ -8,11 +8,9 @@
         "48": "icon_48.png",
         "128": "icon_128.png"
     },
-    "browser_specific_settings": {
-        "gecko": {
-            "id": "{117dc356-01d2-455d-8c27-68115c839ae9}"
-        }
-    },
+    "permissions": [
+        "storage"
+    ],
     "content_scripts": [
         {
             "matches": [
@@ -25,5 +23,9 @@
                 "index.js"
             ]
         }
-    ]
+    ],
+    "options_ui": {
+        "page": "options.html",
+        "open_in_tab": true
+    }
 }

@@ -5,6 +5,12 @@ import { VRCUtil } from "../util/vrc_util.js";
 import { VRChatAPI } from "../vrchat/vrchat_api.js";
 
 export class BetterLocationCard {
+    /**
+     * インスタンスに居るユーザーの人数表示機能が有効化されているかどうか
+     * 初期値はnullで、初回実行時にストレージからデータを取得してきて入れる
+     */
+    static enableInstanceUserCount: boolean | null = null;
+
     //リロードボタンを連続でクリックし、VRC側に負荷がかかりすぎない用のクールタイム
     static updateCoolTime = 0;
 
@@ -157,7 +163,29 @@ export class BetterLocationCard {
      * BetterLocationCardのセットアップをする
      * BetterLocationCardを使うにはこの処理を実行するればいい
      */
-    static setupBetterLocationCard() {
+    static async setupBetterLocationCard() {
+        /**
+         * BetterLocationCard.enableInstanceUserCountがnull(初期値)の時に
+         * ストレージから設定値を取得する
+         * 初回起動時のみストレージからデータを取得するようにするためにこうしている
+         */
+        if(BetterLocationCard.enableInstanceUserCount == null) {
+            // ストレージに収納している設定値のキー
+            const betterLocationCardStorageKey = "enable_location_card_instance_user_count";
+            const result = await chrome.storage.sync.get(betterLocationCardStorageKey);
+
+            if(betterLocationCardStorageKey in result) {
+                BetterLocationCard.enableInstanceUserCount = result[betterLocationCardStorageKey];
+            } else {
+                BetterLocationCard.enableInstanceUserCount = true;
+            }
+        }
+
+        // 設定で無効化されていたら何もせず処理を終了する
+        if(!BetterLocationCard.enableInstanceUserCount) {
+            return;
+        }
+
         this.updateCoolTime++;
 
         //ロケーションカードが入っているdivを取得する

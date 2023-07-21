@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "shell",
-			"command": "Copy-Item better_vrc_dot_com\\*.png better_vrc_dot_com\\dist;Copy-Item better_vrc_dot_com\\manifest.json better_vrc_dot_com\\dist",
+			"command": "Copy-Item better_vrc_dot_com\\*.png better_vrc_dot_com\\dist;Copy-Item better_vrc_dot_com\\manifest.json better_vrc_dot_com\\dist;Copy-Item better_vrc_dot_com\\*.html better_vrc_dot_com\\dist;Copy-Item better_vrc_dot_com\\*.js better_vrc_dot_com\\dist",
 			"label": "copy file",
 			"dependsOrder": "sequence",
 			"dependsOn": [
