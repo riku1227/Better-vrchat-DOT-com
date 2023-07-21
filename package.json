@@ -2,5 +2,8 @@
   "devDependencies": {
     "rollup": "^3.20.0",
     "typescript": "^5.0.2"
+  },
+  "dependencies": {
+    "@types/chrome": "^0.0.241"
   }
 }
