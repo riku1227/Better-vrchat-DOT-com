@@ -1,3 +1,4 @@
+import { FAS } from "../../font_awesome.js";
 import { DOMUtil } from "../../util/dom_util.js";
 
 export class VRCDOM {
@@ -116,11 +117,7 @@ export class VRCDOM {
         buttonLabel.textContent = argObj.label;
         navigationButton.appendChild(buttonLabel);
 
-        //Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.
-        const fasAngleRightPath = "M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z";
-        const fasAngleRightViewBox = "0 0 320 512";
-
-        const arrowIcon = VRCDOM.createSVGIcon("Arrow", fasAngleRightPath, "currentColor", fasAngleRightViewBox);
+        const arrowIcon = VRCDOM.createSVGIcon("Arrow", FAS.angleRight.path, "currentColor", FAS.angleRight.viewBox);
         navigationButton.appendChild(arrowIcon);
 
         navigationButton.addEventListener("click", (event) => { argObj.onClick(event) });

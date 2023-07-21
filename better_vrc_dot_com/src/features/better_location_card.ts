@@ -3,6 +3,7 @@ import { DOMUtil } from "../util/dom_util.js";
 import { VRCDOM } from "../vrchat/dom/vrc_dom.js";
 import { VRCUtil } from "../util/vrc_util.js";
 import { VRChatAPI } from "../vrchat/vrchat_api.js";
+import { FAS } from "../font_awesome.js";
 
 export class BetterLocationCard {
     /**
@@ -19,14 +20,6 @@ export class BetterLocationCard {
 
     static classInstanceUserCountBadge = "better_vrc_dot_com_instance_user_count_badge";
     static classInstanceUserCountUpdateButton = "better_vrc_dot_com_instance_user_count_update_button";
-
-    //Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc.
-    static fasHouseUserPath = "M576 287.6H511.8l1 224.4H64.1V287.6H0V240L288.4 0 576 240v47.6zM352 224c0-35.3-28.7-64-64-64s-64 28.7-64 64s28.7 64 64 64s64-28.7 64-64zm48 192l-32-96H208l-32 96H400z";
-    static fasHouseUserViewBox = "0 0 576 512";
-
-    //Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc.
-    static fasRotateRightPath = "M463.5 224H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5z"
-    static fasRotateRightViewBox = "0 0 512 512";
 
     /**
      * VRCLocationCardでインスタンスの情報を取得する
@@ -68,7 +61,7 @@ export class BetterLocationCard {
      */
     static createInstanceUserBadge(content: string) {
         //アイコンのSVG要素を生成
-        const instanceUserIcon = VRCDOM.createSVGIcon("Number of users in the Instance", this.fasHouseUserPath, "#8f8f8d", this.fasHouseUserViewBox);
+        const instanceUserIcon = VRCDOM.createSVGIcon("Number of users in the Instance", FAS.houseUser.path, "#8f8f8d", FAS.houseUser.viewBox);
         //バッジを生成
         const instanceUserCountBadge = VRCDOM.createIconBadge(instanceUserIcon, content);
         //必要なクラスを追加
@@ -85,7 +78,7 @@ export class BetterLocationCard {
         //既に更新ボタンが追加されていたら実行しない
         if (!this.existsInstanceUserCountUpdateButton(locationCard)) {
             //更新ボタンをアイコン
-            const rotateRightIconSVG = VRCDOM.createSVGIcon("Update number of users in the Instance", this.fasRotateRightPath, "#FFFFFF", this.fasRotateRightViewBox);
+            const rotateRightIconSVG = VRCDOM.createSVGIcon("Update number of users in the Instance", FAS.rotateRight.path, "#FFFFFF", FAS.rotateRight.viewBox);
             //更新ボタン
             const updateButton = VRCDOM.createIconButton(rotateRightIconSVG, async (e) => {
                 //前回の更新から10秒以上経過していたら (500msに一回カウントが追加される)
