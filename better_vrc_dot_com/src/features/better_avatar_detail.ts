@@ -1,3 +1,4 @@
+import { DOMUtil } from "../util/dom_util";
 import { VRCAvatarDetailsPage } from "../vrchat/dom/page/vrc_avatar_details_page";
 
 export class BetterAvatarDetail {
@@ -42,7 +43,7 @@ export class BetterAvatarDetail {
             return;
         }
 
-        detailsPage.makeAvatarPublicButton?.remove();
+        DOMUtil.hideElement(detailsPage.makeAvatarPublicButton);
     }
 
     static async setupHideDeleteAvatarButton(detailsPage: VRCAvatarDetailsPage) {
@@ -69,11 +70,8 @@ export class BetterAvatarDetail {
             return;
         }
 
-        const hr = detailsPage.optionsButtonSpace;
-        if(hr) {
-            hr.style.display = "none";
-        }
-        detailsPage.deleteAvatarButton?.remove();
+        DOMUtil.hideElement(detailsPage.optionsButtonSpace);
+        DOMUtil.hideElement(detailsPage.deleteAvatarButton);
     }
 
     static async setupBetterAvatarDetail(){

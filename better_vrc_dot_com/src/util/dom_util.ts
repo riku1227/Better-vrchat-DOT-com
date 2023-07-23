@@ -12,4 +12,14 @@ export class DOMUtil {
             element.classList.add(classList[i]);
         }
     }
+
+    /**
+     * 指定した要素のdisplayプロパティをnoneにして非表示にする
+     * @param element 要素
+     */
+    static hideElement(element: HTMLElement | null | undefined) {
+        if (element) {
+            element.style.display = "none";
+        }
+    }
 }
