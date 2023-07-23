@@ -65,4 +65,26 @@ export class VRCAvatarDetailsPage {
             return null;
         }
     }
+
+    get optionsButtonSpace(): HTMLHRElement | null | undefined {
+        const buttonsContainer = this.avatarOptionsButtonContainer;
+
+        // ボタンが入っているコンテナに二個以上の要素があった場合は、Switch AvatarとDelete Avatarの間のスペースが存在する
+        if(buttonsContainer.children.length >= 2) {
+            return buttonsContainer.children[2] as HTMLHRElement;
+        } else {
+            return null;
+        }
+    }
+
+    get deleteAvatarButton(): HTMLButtonElement | null | undefined {
+        const buttonsContainer = this.avatarOptionsButtonContainer;
+
+        // ボタンが入っているコンテナに二個以上の要素があった場合は、「Delete Avatar」ボタンが存在する
+        if(buttonsContainer.children.length >= 2) {
+            return buttonsContainer.children[3].children[0] as HTMLButtonElement;
+        } else {
+            return null;
+        }
+    }
 }
