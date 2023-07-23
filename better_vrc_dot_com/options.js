@@ -39,4 +39,46 @@
             }
         )
     });
+
+
+    /**
+     * ------------------------------
+     * アバター情報ページの設定
+      *------------------------------
+     */
+
+    /**
+    * 「Make Avatar Public」ボタンを非表示にする機能の有効/無効設定
+    */
+    // チェックボックスエレメント
+    const enableHideMakeAvatarPublicButton = document.getElementById("avatar_details_enable_hide_make_avatar_public_button");
+    // ストレージに収納している設定値のキー
+    const enableHideMakeAvatarPublicButtonStorageKey = "enable_hide_make_avatar_public_button";
+
+    // 設定値を取得する
+    chrome.storage.sync.get(enableHideMakeAvatarPublicButtonStorageKey).then((result) => {
+        /**
+         * 設定値が存在していた場合はその設定値をチェックボックスに入れる
+         * 存在しなかった場合はデフォルトの値をチェックボックスに入れ、ストレージにデフォルトの値を保存する
+         */
+        if(enableHideMakeAvatarPublicButtonStorageKey in result) {
+            enableHideMakeAvatarPublicButton.checked = result[enableHideMakeAvatarPublicButtonStorageKey];
+        } else {
+            enableHideMakeAvatarPublicButton.checked = false;
+            chrome.storage.sync.set(
+                {
+                    [enableHideMakeAvatarPublicButtonStorageKey] : false
+                }
+            );
+        }
+    });
+
+    // チェックボックスの値が変更された場合、その値をストレージに保存する
+    enableHideMakeAvatarPublicButton.addEventListener("change", () => {
+        chrome.storage.sync.set(
+            {
+                [enableHideMakeAvatarPublicButtonStorageKey] : enableHideMakeAvatarPublicButton.checked
+            }
+        )
+    })
 })();
