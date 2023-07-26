@@ -1,0 +1,32 @@
+{
+    "extension_name": {
+        "message": "Better vrchat DOT com"
+    },
+    "extension_description": {
+        "message": "Extension to make VRChat official website more convenient"
+    },
+    "options_title": {
+        "message": "Settings for Better vrchat DOT com"
+    },
+    "options_better_location_card_header": {
+        "message": "Settings for Better Location Card"
+    },
+    "options_better_location_card_description": {
+        "message": "Functionality to display the number of people in the instance in the Join Friends tab"
+    },
+    "options_better_location_card_enable_instance_user_count": {
+        "message": "Display the number of people in the instance"
+    },
+    "options_better_avatar_details_header": {
+        "message": "Settings for Avatar Information Page"
+    },
+    "options_better_avatar_details_description": {
+        "message": "Functionality to hide the 'Make Avatar Public' button"
+    },
+    "options_better_avatar_details_enable_hide_make_public_avatar": {
+        "message": "Hide the 'Make Avatar Public' button"
+    },
+    "options_better_avatar_details_enable_hide_delete_avatar": {
+        "message": "Hide the 'Delete Avatar' button"
+    }
+}

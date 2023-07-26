@@ -1,0 +1,32 @@
+{
+    "extension_name": {
+        "message": "Better vrchat DOT com"
+    },
+    "extension_description": {
+        "message": "VRChat公式サイトをちょっと便利にする拡張機能"
+    },
+    "options_title": {
+        "message": "Better vrchat DOT com の設定"
+    },
+    "options_better_location_card_header": {
+        "message": "Better Location Card の設定"
+    },
+    "options_better_location_card_description": {
+        "message": "Join Friends タブで表示されるインスタンス情報にインスタンスに居る人数を表示する機能などがあります"
+    },
+    "options_better_location_card_enable_instance_user_count": {
+        "message": "インスタンスに居る人数を表示する"
+    },
+    "options_better_avatar_details_header": {
+        "message": "アバター情報ページの設定"
+    },
+    "options_better_avatar_details_description": {
+        "message": "「Make Avatar Public」ボタンを非表示にする機能などがあります"
+    },
+    "options_better_avatar_details_enable_hide_make_public_avatar": {
+        "message": "「Make Avatar Public」ボタンを非表示にする"
+    },
+    "options_better_avatar_details_enable_hide_delete_avatar": {
+        "message": "「Delete Avatar」ボタンを非表示にする"
+    }
+}
