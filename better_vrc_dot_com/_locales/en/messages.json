@@ -5,6 +5,9 @@
     "extension_description": {
         "message": "Extension to make VRChat official website more convenient"
     },
+    "navigation_open_extension_settings": {
+        "message": "Extension settings"
+    },
     "options_title": {
         "message": "Settings for Better vrchat DOT com"
     },

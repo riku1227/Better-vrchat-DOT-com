@@ -5,6 +5,9 @@
     "extension_description": {
         "message": "VRChat公式サイトをちょっと便利にする拡張機能"
     },
+    "navigation_open_extension_settings": {
+        "message": "拡張機能の設定"
+    },
     "options_title": {
         "message": "Better vrchat DOT com の設定"
     },
