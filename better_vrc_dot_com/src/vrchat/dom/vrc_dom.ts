@@ -81,11 +81,13 @@ export class VRCDOM {
     static createIconButton(svgIcon: SVGSVGElement, onClick: (event: MouseEvent) => void): HTMLButtonElement {
         const button = document.createElement("button");
         //ボタンをボタンたらしめるクラスを追加
-        DOMUtil.addClassList(button, ["align-self-end", "css-17kndqb"]);
+        DOMUtil.addClassList(button, ["align-self-end", "me-0", "me-sm-2", "align-items-center", "css-jm7yu6"]);
         //ボタンが横幅いっぱいに拡大されないようにする
         button.style.flex = "none !important";
+        button.style.border = "none";
         //中身のアイコンにマージンを追加
-        DOMUtil.addClassList(svgIcon, ["mx-1"]);
+        DOMUtil.addClassList(svgIcon, ["m-1"]);
+
         //ボタンにアイコンを追加
         button.appendChild(svgIcon);
         //クリックイベントを設定
@@ -106,7 +108,7 @@ export class VRCDOM {
         onClick: (event: MouseEvent) => void
     }): HTMLAnchorElement {
         const navigationButton = document.createElement("a");
-        DOMUtil.addClassList(navigationButton, ["btn", "css-ayw38j"]);
+        DOMUtil.addClassList(navigationButton, ["btn", "css-yjay0l"]);
         navigationButton.id = argObj.id;
 
         if (argObj.icon) {
