@@ -55,22 +55,6 @@ export class BetterLocationCard {
     }
 
     /**
-     * インスタンスのユーザー数を表示するバッジを生成する
-     * @param content コンテンツ
-     * @returns 
-     */
-    static createInstanceUserBadge(content: string) {
-        //アイコンのSVG要素を生成
-        const instanceUserIcon = VRCDOM.createSVGIcon("Number of users in the Instance", FAS.houseUser.path, "#8f8f8d", FAS.houseUser.viewBox);
-        //バッジを生成
-        const instanceUserCountBadge = VRCDOM.createIconBadge(instanceUserIcon, content);
-        //必要なクラスを追加
-        DOMUtil.addClassList(instanceUserCountBadge, [this.classInstanceUserCountBadge]);
-
-        return instanceUserCountBadge;
-    }
-
-    /**
      * インスタンスに居るユーザ数を更新するボタンを追加する
      * @param locationCard 対象のカード
      */
@@ -89,11 +73,33 @@ export class BetterLocationCard {
             });
             DOMUtil.addClassList(updateButton, ["me-sm-2", "flex-grow-0", this.classInstanceUserCountUpdateButton]);
 
-            //Invite Meボタンの左にバッジを設置する
-            locationCard.instanceInfoListElement.insertBefore(
-                updateButton,
-                locationCard.instanceInfoListElement.lastChild
-            );
+            updateButton.title = "インスタンスに居るユーザー数を更新します / Update number of users in the Instance";
+
+            // 元からロケーションカードの中にあるインスタンスに居るユーザー数を表示するバッジ
+            /**
+             * インスタンスのユーザー数を表示するバッジだけ要素が追加されるまで少しラグがあるっぽいので
+             * 子要素の配列から子要素の数を使用した相対的な取得をするとずれる場合が多々発生した
+             * 
+             * そのため、直接指定したいが、title要素くらいしかそのバッジを取得できる子要素が無いが
+             * title要素から取得しようとした場合、このサイトが多言語に対応したときにバグってしまうので
+             * あんまり変更されることが無いであろう(適当)のバッジに使用されているアイコンのクラス名から子要素を取得し、その親要素を取得することでユーザー数バッジを取得する
+             */
+            const numberOfUsersBadgeList = locationCard.instanceInfoListElement.getElementsByClassName("fa-users");
+
+            if (numberOfUsersBadgeList.length > 0) {
+                const numberOfUsersBadge = numberOfUsersBadgeList[0].parentElement;
+
+                if (numberOfUsersBadge) {
+                    // 拡張機能で操作しやすくするためにクラスを付与しておく
+                    DOMUtil.addClassList(numberOfUsersBadge, [this.classInstanceUserCountBadge]);
+
+                    //Invite Meボタンの左にバッジを設置する
+                    locationCard.instanceInfoListElement.insertBefore(
+                        updateButton,
+                        numberOfUsersBadge.nextSibling
+                    );
+                }
+            }
         }
     }
 
@@ -106,38 +112,20 @@ export class BetterLocationCard {
             const request = await this.getInstanceWorld(locationCard);
             const result = JSON.parse(request.response);
 
+            // ユーザー数を表示するバッジを取得する
             const instanceUserCountBadge = locationCard.instanceInfoListElement.getElementsByClassName(this.classInstanceUserCountBadge)[0];
-            //instanceUserCountBadge.textContent = instanceUserCountBadge.innerHTML.replace(this.instanceUserBadgeRegex, result.n_users + "<svg");
 
             /**
-             * innerHtml使ったらFirefoxに怒られたから使わないために新しくバッジを作って入れ替える
+             * 取得してきたデータを使った更新するテキスト
+             * 一緒にキャパシティとか取ってこれるのでついでに使う
              */
+            const newUserCountText = `${result.n_users}/${result.capacity}`;
 
-            const newInstanceUserCountBadge = this.createInstanceUserBadge(result.n_users);
-            instanceUserCountBadge.replaceWith(newInstanceUserCountBadge);
-        }
-    }
-
-    static addInstanceUserCountBadge(locationCard: VRCLocationCard) {
-        if (!this.existsInstanceUserCountBadge(locationCard)) {
-            const instanceUserCountBadge = this.createInstanceUserBadge("Click");
-
-            //Invite Meボタンの左にバッジを設置する
-            locationCard.instanceInfoListElement.insertBefore(
-                instanceUserCountBadge,
-                locationCard.instanceInfoListElement.lastChild
-            );
-
-            //バッジが"Click"状態の時にクリックしたら実行される
-            const firstUpdate = async () => {
-                //人数を表示 (取得)
-                await this.updateInstanceUserCountBadge(locationCard);
-                //更新ボタンを追加
-                this.addInstanceUserCountUpdateButton(locationCard);
-                //以降バッジをクリックしてもこれが実行されないように削除する
-                instanceUserCountBadge.removeEventListener("click", firstUpdate);
+            // バッジ内のテキストのみ上書きできるようにfirstChildで取得できる要素を更新する
+            const userCountTextNode = instanceUserCountBadge.firstChild;
+            if (userCountTextNode) {
+                userCountTextNode.textContent = `${newUserCountText}`;
             }
-            instanceUserCountBadge.addEventListener("click", firstUpdate);
         }
     }
 
@@ -162,12 +150,12 @@ export class BetterLocationCard {
          * ストレージから設定値を取得する
          * 初回起動時のみストレージからデータを取得するようにするためにこうしている
          */
-        if(BetterLocationCard.enableInstanceUserCount == null) {
+        if (BetterLocationCard.enableInstanceUserCount == null) {
             // ストレージに収納している設定値のキー
             const betterLocationCardStorageKey = "enable_location_card_instance_user_count";
             const result = await chrome.storage.sync.get(betterLocationCardStorageKey);
 
-            if(betterLocationCardStorageKey in result) {
+            if (betterLocationCardStorageKey in result) {
                 BetterLocationCard.enableInstanceUserCount = result[betterLocationCardStorageKey];
             } else {
                 BetterLocationCard.enableInstanceUserCount = true;
@@ -175,7 +163,7 @@ export class BetterLocationCard {
         }
 
         // 設定で無効化されていたら何もせず処理を終了する
-        if(!BetterLocationCard.enableInstanceUserCount) {
+        if (!BetterLocationCard.enableInstanceUserCount) {
             return;
         }
 
@@ -196,7 +184,7 @@ export class BetterLocationCard {
         for (let i = 0; i < locationCardList.length; i++) {
             const locationCard = new VRCLocationCard(locationCardList[i]);
             this.setupInstanceInfoLayout(locationCard);
-            this.addInstanceUserCountBadge(locationCard);
+            this.addInstanceUserCountUpdateButton(locationCard);
         }
     }
 }
