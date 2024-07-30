@@ -13,7 +13,7 @@ export class BetterLocationCard {
     static enableInstanceUserCount: boolean | null = null;
 
     //リロードボタンを連続でクリックし、VRC側に負荷がかかりすぎない用のクールタイム
-    static updateCoolTime = 0;
+    static updateCoolTime = 10;
 
     //"Join Friends"タブのロケーションカードリストの親Divのクラス名
     static locationsDivClassName = "locations";
