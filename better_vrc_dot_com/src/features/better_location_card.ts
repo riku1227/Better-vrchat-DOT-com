@@ -119,7 +119,7 @@ export class BetterLocationCard {
              * 取得してきたデータを使った更新するテキスト
              * 一緒にキャパシティとか取ってこれるのでついでに使う
              */
-            const newUserCountText = `${result.n_users}/${result.capacity}`;
+            const newUserCountText = `${result.n_users}/${result.recommendedCapacity}(${result.capacity})`;
 
             // バッジ内のテキストのみ上書きできるようにfirstChildで取得できる要素を更新する
             const userCountTextNode = instanceUserCountBadge.firstChild;
