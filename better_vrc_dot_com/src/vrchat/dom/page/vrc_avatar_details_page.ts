@@ -7,11 +7,10 @@ export class VRCAvatarDetailsPage {
     constructor(homeContent: HTMLDivElement) {
         /**
          * div: home-content
-         *   div: container
-         *     div: ← これを取っておく
-         *       ...: ここに色々と情報の要素がある
+         *   div: container ← これを取っておく
+         *     ...: ここに色々と情報の要素がある     
          *  */ 
-        this.content = homeContent.children[0].children[0] as HTMLDivElement;
+        this.content = homeContent.children[0] as HTMLDivElement;
     }
 
     // アバターのサムネ/名前/アップロードしたユーザー名 などが表示されるコンテナ
