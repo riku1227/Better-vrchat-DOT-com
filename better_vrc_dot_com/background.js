@@ -6,7 +6,7 @@ chrome.runtime.onMessage.addListener(
             // 拡張機能の設定ページを開く
             case "better_vrchat_dot_com_open_settings":
                 chrome.tabs.create({
-                    url: "options.html",
+                    url: "options/options.html",
                     active: true
                 });
                 break;

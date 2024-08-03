@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <title>Better vrchat DOT comの設定</title>
+    <meta charset="utf-8">
+</head>
+<style>
+    html,
+    body {
+        height: 100%;
+        margin: 0px;
+        color: white;
+    }
+
+    .main-container {
+        display: flex;
+        height: 100%;
+    }
+
+    .left-container {
+        width: 30%;
+        max-width: 360px;
+        padding: 8px;
+        background-color: hsl(257, 10%, 14%);
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    .right-container {
+        min-width: 70%;
+        width: 100%;
+        padding: 16px;
+        background-color: hsl(257, 10%, 14%);
+
+        h1 {
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+
+        .card {
+            border-radius: 4px;
+            background-color: hsl(257, 10%, 22%);
+
+            &:hover {
+                background-color: hsl(257, 10%, 28%);
+            }
+
+            input {
+                accent-color: #e15c76
+            }
+
+            h3 {
+                margin: 0px;
+                padding-top: 16px;
+                padding-bottom: 16px;
+                font-weight: normal;
+                font-size: 1.1rem;
+            }
+        }
+
+        .sub-card {
+            border-radius: 4px;
+            background-color: hsl(257, 10%, 18%);
+        }
+    }
+
+    .flexContainer {
+        display: flex;
+    }
+
+    h1 {
+        color: white;
+    }
+
+    .side-menu {
+        list-style: none;
+        padding: 0px;
+        margin: 0px;
+
+        li {
+            color: white;
+            padding: 16px;
+            font-size: 1rem;
+            border-radius: 4px;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        li:hover {
+            background-color: hsl(257, 10%, 20%);
+        }
+
+        li::before {
+            content: "・";
+            margin-right: 5px;
+        }
+    }
+
+    .side-menu_selected {
+        background-color: hsl(257, 10%, 28%);
+    }
+
+    .header {
+        display: flex;
+        align-items: center;
+    }
+
+    .header img {
+        width: 3rem;
+    }
+
+    .header h2 {
+        margin-left: 10px;
+    }
+
+    .fade-out {
+        animation-name: fadeOut;
+        animation-duration: 0.1s;
+        animation-fill-mode: forwards;
+    }
+
+    .fade-in {
+        animation-name: fadeIn;
+        animation-duration: 0.1s;
+        animation-fill-mode: forwards;
+        animation-timing-function: ease-out;
+    }
+
+    .normal-outline {
+        border: 1px solid white;
+        padding: 4px;
+
+        &:hover {
+            background-color: hsl(257, 10%, 32%);
+        }
+    }
+
+    .selected-outline {
+        border: 1px solid #e15c76;
+        padding: 4px;
+
+        &:hover {
+            background-color: hsl(257, 10%, 32%);
+        }
+    }
+
+    @keyframes fadeOut {
+        0% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0px);
+        }
+    }
+
+    .divider {
+        height: 1px;
+        background-color: #645e73;
+        margin: 16px 0;
+    }
+</style>
+
+<body>
+    <div class="main-container">
+        <div class="left-container">
+            <div class="header">
+                <img src="../images/extension_icon.png">
+                <h2>設定</h2>
+            </div>
+            <ul class="side-menu" id="menu">
+                <li data-content="all" class="side-menu_selected">全ての設定</li>
+                <li data-content="content1">フレンドのロケーションページ</li>
+                <li data-content="content2">アバターの詳細ページ</li>
+            </ul>
+        </div>
+        <div class="right-container">
+            <div id="content1" style="display: block;">
+                <h1>フレンドのロケーションページ</h1>
+                <div class="card">
+                    <label for="enable_location_card_instance_user_count">
+                        <div class="flexContainer">
+                            <div style="margin-right: 8px;"></div>
+                            <input type="checkbox" id="enable_location_card_instance_user_count" name="enable_location_card_instance_user_count" checked>
+
+                            <div style="margin-right: 8px;"></div>
+                            <h3>インスタンスに居るユーザー数の情報を更新するボタンを表示する</h3>
+                        </div>
+                        <div class="sub-card" style="padding: 8px;">
+                            <p style="margin: 0;">VRChatへの過剰なアクセスを防止するために、500ミリ秒のクールタイムが存在しています</p>
+                            <img src="../images/options/friends_location/better_location_sample.png" style="width: 65%; margin-top: 8px;">
+                            <p style="margin: 0;">更新ボタンを押すことで、そのインスタンスのキャパシティも表示されます</p>
+                            <p style="margin: 0;">現在のユーザー数/推奨人数(最大人数)の表示になります</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="divider" style="display: block;""></div>
+            <div id="content2" style="display: block;">
+                <h1>アバターの詳細ページ</h1>
+                <div class="card">
+                    <label for="enable_hide_make_avatar_public_button">
+                        <div class="flexContainer">
+                            <div style="margin-right: 8px;"></div>
+                            <input type="checkbox" id="enable_hide_make_avatar_public_button" name="enable_hide_make_avatar_public_button" checked>
+
+                            <div style="margin-right: 8px;"></div>
+                            <h3>「Make Avatar Public」ボタンを非表示にする</h3>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="card" style="margin-top: 8px;">
+                    <label for="enable_hide_delete_avatar_button">
+                        <div class="flexContainer">
+                            <div style="margin-right: 8px;"></div>
+                            <input type="checkbox" id="enable_hide_delete_avatar_button" name="enable_hide_delete_avatar_button" checked>
+
+                            <div style="margin-right: 8px;"></div>
+                            <h3>「Delete Avatar」ボタンを非表示にする</h3>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="options.js"></script>
+
+</html>

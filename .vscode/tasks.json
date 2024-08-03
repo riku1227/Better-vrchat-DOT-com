@@ -19,7 +19,17 @@
 		},
 		{
 			"type": "shell",
-			"command": "Copy-Item better_vrc_dot_com\\*.png better_vrc_dot_com\\dist;Copy-Item better_vrc_dot_com\\manifest.json better_vrc_dot_com\\dist;Copy-Item better_vrc_dot_com\\*.html better_vrc_dot_com\\dist;Copy-Item better_vrc_dot_com\\*.js better_vrc_dot_com\\dist;Copy-Item better_vrc_dot_com\\_locales\\ better_vrc_dot_com\\dist -Recurse; Copy-Item better_vrc_dot_com\\images\\ better_vrc_dot_com\\dist -Recurse",
+			"command": [
+				"Copy-Item better_vrc_dot_com\\*.png better_vrc_dot_com\\dist;",
+				"Copy-Item better_vrc_dot_com\\manifest.json better_vrc_dot_com\\dist;",
+				"Copy-Item better_vrc_dot_com\\*.html better_vrc_dot_com\\dist;",
+				"Copy-Item better_vrc_dot_com\\*.js better_vrc_dot_com\\dist;",
+				"Copy-Item better_vrc_dot_com\\_locales\\ better_vrc_dot_com\\dist -Recurse;",
+				"Copy-Item better_vrc_dot_com\\images\\ better_vrc_dot_com\\dist -Recurse;",
+				"New-Item -Path better_vrc_dot_com\\dist\\options\\ -ItemType Directory -ErrorAction SilentlyContinue;",
+				"Copy-Item better_vrc_dot_com\\src\\options\\*.html better_vrc_dot_com\\dist\\options\\;",
+				"Copy-Item better_vrc_dot_com\\build\\options\\*.js better_vrc_dot_com\\dist\\options\\;",
+			],
 			"label": "copy file",
 			"dependsOrder": "sequence",
 			"dependsOn": [
