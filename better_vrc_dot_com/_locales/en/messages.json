@@ -3,33 +3,46 @@
         "message": "Better vrchat DOT com"
     },
     "extension_description": {
-        "message": "Extension to make VRChat official website more convenient"
+        "message": "Extension to make the official VRChat website a bit more convenient"
     },
     "navigation_open_extension_settings": {
-        "message": "Extension settings"
+        "message": "Extension Settings"
     },
     "options_title": {
-        "message": "Settings for Better vrchat DOT com"
+        "message": "Better vrchat DOT com Settings"
     },
-    "options_better_location_card_header": {
-        "message": "Settings for Better Location Card"
+
+    "navigation_display_all_settings": {
+        "message": "All Settings"
     },
-    "options_better_location_card_description": {
-        "message": "Functionality to display the number of people in the instance in the Join Friends tab"
+
+    "navigation_friends_location_page": {
+        "message": "Friends' Locations"
     },
-    "options_better_location_card_enable_instance_user_count": {
-        "message": "Display the number of people in the instance"
+
+    "navigation_avatar_details_page": {
+        "message": "Avatar Details"
     },
-    "options_better_avatar_details_header": {
-        "message": "Settings for Avatar Information Page"
+
+    "friends_location_enable_instance_user_count_update_button": {
+        "message": "Display a button to update the number of users in an instance"
     },
-    "options_better_avatar_details_description": {
-        "message": "Functionality to hide the 'Make Avatar Public' button"
+
+    "friends_location_enable_instance_user_count_update_button_description_01": {
+        "message": "There is a 500-millisecond cooldown to prevent excessive access to VRChat"
     },
-    "options_better_avatar_details_enable_hide_make_public_avatar": {
+    "friends_location_enable_instance_user_count_update_button_description_02": {
+        "message": "Pressing the update button will also display the capacity of that instance"
+    },
+    "friends_location_enable_instance_user_count_update_button_description_03": {
+        "message": "It will be displayed as: Current number of users / Recommended number (Maximum number)"
+    },
+
+    "avatar_details_enable_hide_make_public_avatar_button": {
         "message": "Hide the 'Make Avatar Public' button"
     },
-    "options_better_avatar_details_enable_hide_delete_avatar": {
+
+    "avatar_details_enable_hide_delete_avatar_button": {
         "message": "Hide the 'Delete Avatar' button"
     }
 }

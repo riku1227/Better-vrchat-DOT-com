@@ -11,25 +11,38 @@
     "options_title": {
         "message": "Better vrchat DOT com の設定"
     },
-    "options_better_location_card_header": {
-        "message": "Better Location Card の設定"
+
+    "navigation_display_all_settings": {
+        "message": "全ての設定"
     },
-    "options_better_location_card_description": {
-        "message": "Join Friends タブで表示されるインスタンス情報にインスタンスに居る人数を表示する機能などがあります"
+
+    "navigation_friends_location_page": {
+        "message": "フレンドのロケーション"
     },
-    "options_better_location_card_enable_instance_user_count": {
-        "message": "インスタンスに居る人数を表示する"
+
+    "navigation_avatar_details_page": {
+        "message": "アバターの詳細"
     },
-    "options_better_avatar_details_header": {
-        "message": "アバター情報ページの設定"
+
+    "friends_location_enable_instance_user_count_update_button": {
+        "message": "インスタンスに居るユーザー数の情報を更新するボタンを表示する"
     },
-    "options_better_avatar_details_description": {
-        "message": "「Make Avatar Public」ボタンを非表示にする機能などがあります"
+
+    "friends_location_enable_instance_user_count_update_button_description_01": {
+        "message": "VRChatへの過剰なアクセスを防止するために、500ミリ秒のクールタイムが存在しています"
     },
-    "options_better_avatar_details_enable_hide_make_public_avatar": {
+    "friends_location_enable_instance_user_count_update_button_description_02": {
+        "message": "更新ボタンを押すことで、そのインスタンスのキャパシティも表示されます"
+    },
+    "friends_location_enable_instance_user_count_update_button_description_03": {
+        "message": "現在のユーザー数/推奨人数(最大人数)という表示になります"
+    },
+
+    "avatar_details_enable_hide_make_public_avatar_button": {
         "message": "「Make Avatar Public」ボタンを非表示にする"
     },
-    "options_better_avatar_details_enable_hide_delete_avatar": {
+
+    "avatar_details_enable_hide_delete_avatar_button": {
         "message": "「Delete Avatar」ボタンを非表示にする"
     }
 }

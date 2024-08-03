@@ -2,7 +2,7 @@
 <html lang="ja">
 
 <head>
-    <title>Better vrchat DOT comの設定</title>
+    <title>Better vrchat DOT com settings</title>
     <meta charset="utf-8">
 </head>
 <style>
@@ -181,17 +181,17 @@
         <div class="left-container">
             <div class="header">
                 <img src="../images/extension_icon.png">
-                <h2>設定</h2>
+                <h2 class="translate">navigation_open_extension_settings</h2>
             </div>
             <ul class="side-menu" id="menu">
-                <li data-content="all" class="side-menu_selected">全ての設定</li>
-                <li data-content="content1">フレンドのロケーションページ</li>
-                <li data-content="content2">アバターの詳細ページ</li>
+                <li data-content="all" class="side-menu_selected translate">navigation_display_all_settings</li>
+                <li data-content="content1" class="translate">navigation_friends_location_page</li>
+                <li data-content="content2" class="translate">navigation_avatar_details_page</li>
             </ul>
         </div>
         <div class="right-container">
             <div id="content1" style="display: block;">
-                <h1>フレンドのロケーションページ</h1>
+                <h1 class="translate">navigation_friends_location_page</h1>
                 <div class="card">
                     <label for="enable_location_card_instance_user_count">
                         <div class="flexContainer">
@@ -199,20 +199,20 @@
                             <input type="checkbox" id="enable_location_card_instance_user_count" name="enable_location_card_instance_user_count" checked>
 
                             <div style="margin-right: 8px;"></div>
-                            <h3>インスタンスに居るユーザー数の情報を更新するボタンを表示する</h3>
+                            <h3 class="translate">friends_location_enable_instance_user_count_update_button</h3>
                         </div>
                         <div class="sub-card" style="padding: 8px;">
-                            <p style="margin: 0;">VRChatへの過剰なアクセスを防止するために、500ミリ秒のクールタイムが存在しています</p>
+                            <p style="margin: 0;" class="translate">friends_location_enable_instance_user_count_update_button_description_01</p>
                             <img src="../images/options/friends_location/better_location_sample.png" style="width: 65%; margin-top: 8px;">
-                            <p style="margin: 0;">更新ボタンを押すことで、そのインスタンスのキャパシティも表示されます</p>
-                            <p style="margin: 0;">現在のユーザー数/推奨人数(最大人数)の表示になります</p>
+                            <p style="margin: 0;" class="translate">friends_location_enable_instance_user_count_update_button_description_02</p>
+                            <p style="margin: 0;" class="translate">friends_location_enable_instance_user_count_update_button_description_03</p>
                         </div>
                     </label>
                 </div>
             </div>
             <div class="divider" style="display: block;""></div>
             <div id="content2" style="display: block;">
-                <h1>アバターの詳細ページ</h1>
+                <h1 class="translate">navigation_avatar_details_page</h1>
                 <div class="card">
                     <label for="enable_hide_make_avatar_public_button">
                         <div class="flexContainer">
@@ -220,7 +220,7 @@
                             <input type="checkbox" id="enable_hide_make_avatar_public_button" name="enable_hide_make_avatar_public_button" checked>
 
                             <div style="margin-right: 8px;"></div>
-                            <h3>「Make Avatar Public」ボタンを非表示にする</h3>
+                            <h3 class="translate">avatar_details_enable_hide_make_public_avatar_button</h3>
                         </div>
                     </label>
                 </div>
@@ -232,7 +232,7 @@
                             <input type="checkbox" id="enable_hide_delete_avatar_button" name="enable_hide_delete_avatar_button" checked>
 
                             <div style="margin-right: 8px;"></div>
-                            <h3>「Delete Avatar」ボタンを非表示にする</h3>
+                            <h3 class="translate">avatar_details_enable_hide_delete_avatar_button</h3>
                         </div>
                     </label>
                 </div>

@@ -1,6 +1,7 @@
 // ページが読み込まれたときの処理
 window.onload = () => {
     setupSideMenu();
+    translateDOMElementTextContent();
 
     /**
      * Friends Location Settings
@@ -23,6 +24,23 @@ window.onload = () => {
 
     initializeCheckBox(deleteAvatarCheckbox, enableDeleteAvatarKey, false);
 };
+
+/**
+ * 'translate'クラスを持つ要素のテキストコンテンツをchrome.i18nで取得した値に変更する
+ * 多言語対応用
+ */
+const translateDOMElementTextContent = () => {
+    const elements = document.getElementsByClassName('translate');
+    for (let i = 0; i < elements.length; i++) {
+        const element = elements[i];
+        const textContent = element.textContent;
+        if (textContent) {
+            const translatedText = chrome.i18n.getMessage(textContent);
+
+            element.textContent = translatedText;
+        }
+    }
+}
 
 /**
  * ストレージから設定の値を読み込んでセレクトボックスにセットし
@@ -94,7 +112,7 @@ const initializeCheckBox = (checkbox: HTMLInputElement, storageKey: string, defa
 
         checkbox.checked = setValue;
     });
-    
+
     checkbox.addEventListener('change', (event) => {
         const value = (event.target as HTMLInputElement).checked;
         chrome.storage.sync.set({ [storageKey]: value }).then();
@@ -115,7 +133,7 @@ const setupSideMenu = () => {
                 return;
             }
             const clickContent = document.getElementById(contentStr);
-            
+
             /**
              * 一度全てのコンテンツを非表示にしてから
              * 対象のコンテンツを表示させる
@@ -142,14 +160,14 @@ const setupSideMenu = () => {
                     element.classList.remove('fade-out');
 
                     // HTML側で設定されているが"all"の場合、全てのコンテンツを表示する
-                    if(contentStr == "all") {
+                    if (contentStr == "all") {
                         element.style.display = 'block';
                         element.classList.add('fade-in');
                         setTimeout(() => {
                             element.classList.remove('fade-in');
                         }, 100);
                     } else {
-                        if(clickContent) {
+                        if (clickContent) {
                             clickContent.style.display = 'block';
                             clickContent.classList.add('fade-in');
                             setTimeout(() => {
