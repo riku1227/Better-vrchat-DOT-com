@@ -11,6 +11,11 @@ window.onload = () => {
 
     initializeCheckBox(searchPagePostageCheckbox, enableSearchPagePostageKey, true);
 
+    const hideInstanceUserCountKey = "hide_location_card_instance_user_count";
+    const hideInstanceUserCountCheckbox = document.getElementById(hideInstanceUserCountKey) as HTMLInputElement;
+
+    initializeCheckBox(hideInstanceUserCountCheckbox, hideInstanceUserCountKey, false);
+
     /**
      * Avatar Detail Settings
      */

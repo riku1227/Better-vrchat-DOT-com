@@ -38,6 +38,14 @@
         "message": "現在のユーザー数/推奨人数(最大人数)という表示になります"
     },
 
+    "friends_location_hide_instance_user_count": {
+        "message": "インスタンスに居るユーザー数を非表示にする"
+    },
+
+    "friends_location_hide_instance_user_count_description": {
+        "message": "このオプションを有効化すると、ユーザー数の更新ボタンも非表示になります"
+    },
+
     "avatar_details_enable_hide_make_public_avatar_button": {
         "message": "「Make Avatar Public」ボタンを非表示にする"
     },

@@ -12,6 +12,12 @@ export class BetterLocationCard {
      */
     static enableInstanceUserCount: boolean | null = null;
 
+    /**
+     * インスタンスに居るユーザー数を非表示にする機能が有効化されているかどうか
+     * 初期値はnullで、初回実行時にストレージからデータを取得してきて入れる
+     */
+    static enableHideInstanceUserCount: boolean | null = null;
+
     //リロードボタンを連続でクリックし、VRC側に負荷がかかりすぎない用のクールタイム
     static updateCoolTime = 10;
 
@@ -20,6 +26,8 @@ export class BetterLocationCard {
 
     static classInstanceUserCountBadge = "better_vrc_dot_com_instance_user_count_badge";
     static classInstanceUserCountUpdateButton = "better_vrc_dot_com_instance_user_count_update_button";
+
+    static classHideInstanceUserCount = "better_vrc_dot_com_hide_instance_user_count";
 
     /**
      * VRCLocationCardでインスタンスの情報を取得する
@@ -55,6 +63,28 @@ export class BetterLocationCard {
     }
 
     /**
+     * インスタンスに居るユーザー数を表示するバッジを取得する
+     * ロードが少し遅く、カードに場合もあるので、その場合はnullを返す
+     */
+    static getInstanceUserCountBadge(locationCard: VRCLocationCard): HTMLElement | null {
+        /**
+        * インスタンスのユーザー数を表示するバッジだけ要素が追加されるまで少しラグがあるっぽいので
+        * 子要素の配列から子要素の数を使用した相対的な取得をするとずれる場合が多々発生した
+        * 
+        * そのため、直接指定したいが、title要素くらいしかそのバッジを取得できる子要素が無いが
+        * title要素から取得しようとした場合、このサイトが多言語に対応したときにバグってしまうので
+        * あんまり変更されることが無いであろう(適当)のバッジに使用されているアイコンのクラス名から子要素を取得し、その親要素を取得することでユーザー数バッジを取得する
+        */
+        const numberOfUsersBadgeList = locationCard.instanceInfoListElement.getElementsByClassName("fa-users");
+        if (numberOfUsersBadgeList.length == 0) {
+            return null;
+        } else {
+            const numberOfUsersBadge = numberOfUsersBadgeList[0] as HTMLElement;
+            return numberOfUsersBadge.parentElement as HTMLElement;
+        }
+    }
+
+    /**
      * インスタンスに居るユーザ数を更新するボタンを追加する
      * @param locationCard 対象のカード
      */
@@ -76,19 +106,9 @@ export class BetterLocationCard {
             updateButton.title = "インスタンスに居るユーザー数を更新します / Update number of users in the Instance";
 
             // 元からロケーションカードの中にあるインスタンスに居るユーザー数を表示するバッジ
-            /**
-             * インスタンスのユーザー数を表示するバッジだけ要素が追加されるまで少しラグがあるっぽいので
-             * 子要素の配列から子要素の数を使用した相対的な取得をするとずれる場合が多々発生した
-             * 
-             * そのため、直接指定したいが、title要素くらいしかそのバッジを取得できる子要素が無いが
-             * title要素から取得しようとした場合、このサイトが多言語に対応したときにバグってしまうので
-             * あんまり変更されることが無いであろう(適当)のバッジに使用されているアイコンのクラス名から子要素を取得し、その親要素を取得することでユーザー数バッジを取得する
-             */
-            const numberOfUsersBadgeList = locationCard.instanceInfoListElement.getElementsByClassName("fa-users");
+            const numberOfUsersBadge = this.getInstanceUserCountBadge(locationCard);
 
-            if (numberOfUsersBadgeList.length > 0) {
-                const numberOfUsersBadge = numberOfUsersBadgeList[0].parentElement;
-
+            if (numberOfUsersBadge != null) {
                 if (numberOfUsersBadge) {
                     // 拡張機能で操作しやすくするためにクラスを付与しておく
                     DOMUtil.addClassList(numberOfUsersBadge, [this.classInstanceUserCountBadge]);
@@ -130,6 +150,17 @@ export class BetterLocationCard {
     }
 
     /**
+     * インスタンスに居るユーザー数を表示するバッジを非表示にする
+     */
+    static hideInstanceUserCountBadge(locationCard: VRCLocationCard) {
+        const instanceUserCountBadge = this.getInstanceUserCountBadge(locationCard);
+        if (instanceUserCountBadge) {
+            DOMUtil.addClassList(instanceUserCountBadge, [this.classHideInstanceUserCount]);
+            instanceUserCountBadge.style.display = "none";
+        }
+    }
+
+    /**
      * 情報を追加するために必要なレイアウトにするためにクラスを追加する
      * @param locationCard 対象のロケーションカード
      */
@@ -141,17 +172,12 @@ export class BetterLocationCard {
     }
 
     /**
-     * BetterLocationCardのセットアップをする
-     * BetterLocationCardを使うにはこの処理を実行するればいい
+     * ストレージから設定の値を取得し、変数に格納する
+     * 初回起動時に一回だけ読み込むようにしてある
      */
-    static async setupBetterLocationCard() {
-        /**
-         * BetterLocationCard.enableInstanceUserCountがnull(初期値)の時に
-         * ストレージから設定値を取得する
-         * 初回起動時のみストレージからデータを取得するようにするためにこうしている
-         */
+    static async setupOptionValues() {
+        // インスタンスに居るユーザー数を更新するボタンを表示するかどうかの設定
         if (BetterLocationCard.enableInstanceUserCount == null) {
-            // ストレージに収納している設定値のキー
             const betterLocationCardStorageKey = "enable_location_card_instance_user_count";
             const result = await chrome.storage.sync.get(betterLocationCardStorageKey);
 
@@ -161,6 +187,26 @@ export class BetterLocationCard {
                 BetterLocationCard.enableInstanceUserCount = true;
             }
         }
+
+        // インスタンに居るユーザー数を非表示にするかどうかの設定
+        if (BetterLocationCard.enableHideInstanceUserCount == null) {
+            const hideInstanceUserCountKey = "hide_location_card_instance_user_count";
+            const result = await chrome.storage.sync.get(hideInstanceUserCountKey);
+
+            if (hideInstanceUserCountKey in result) {
+                BetterLocationCard.enableHideInstanceUserCount = result[hideInstanceUserCountKey];
+            } else {
+                BetterLocationCard.enableHideInstanceUserCount = false;
+            }
+        }
+    }
+
+    /**
+     * BetterLocationCardのセットアップをする
+     * BetterLocationCardを使うにはこの処理を実行するればいい
+     */
+    static async setupBetterLocationCard() {
+        await this.setupOptionValues();
 
         // 設定で無効化されていたら何もせず処理を終了する
         if (!BetterLocationCard.enableInstanceUserCount) {
@@ -184,7 +230,14 @@ export class BetterLocationCard {
         for (let i = 0; i < locationCardList.length; i++) {
             const locationCard = new VRCLocationCard(locationCardList[i]);
             this.setupInstanceInfoLayout(locationCard);
-            this.addInstanceUserCountUpdateButton(locationCard);
+            /**
+             * ユーザー数を非表示にする設定が有効化されていた場合は、有効化されていてもユーザー数を更新するボタンを追加しない (意味無いので)
+             */
+            if (this.enableHideInstanceUserCount) {
+                this.hideInstanceUserCountBadge(locationCard);
+            } else {
+                this.addInstanceUserCountUpdateButton(locationCard);
+            }
         }
     }
 }

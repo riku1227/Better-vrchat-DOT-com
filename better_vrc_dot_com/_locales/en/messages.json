@@ -38,6 +38,14 @@
         "message": "It will be displayed as: Current number of users / Recommended number (Maximum number)"
     },
 
+    "friends_location_hide_instance_user_count": {
+        "message": "Hide instance user count"
+    },
+
+    "friends_location_hide_instance_user_count_description": {
+        "message": "If you enable this option, the button to update the user count will also be hidden"
+    },
+
     "avatar_details_enable_hide_make_public_avatar_button": {
         "message": "Hide the 'Make Avatar Public' button"
     },
