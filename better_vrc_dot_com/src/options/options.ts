@@ -166,11 +166,17 @@ const setupSideMenu = () => {
 
                     // HTML側で設定されているが"all"の場合、全てのコンテンツを表示する
                     if (contentStr == "all") {
-                        element.style.display = 'block';
-                        element.classList.add('fade-in');
-                        setTimeout(() => {
-                            element.classList.remove('fade-in');
-                        }, 100);
+                        /**
+                         * "hidden"クラスが付与されているコンテンツは全て表示で表示しない
+                         * 個別にサイドバーをクリックしたときのみに表示されるようにする (Infoページなどに利用)
+                         */
+                        if(!element.classList.contains("hidden")) {
+                            element.style.display = 'block';
+                            element.classList.add('fade-in');
+                            setTimeout(() => {
+                                element.classList.remove('fade-in');
+                            }, 100);
+                        }
                     } else {
                         if (clickContent) {
                             clickContent.style.display = 'block';

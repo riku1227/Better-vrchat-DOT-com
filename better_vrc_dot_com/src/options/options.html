@@ -11,6 +11,7 @@
         height: 100%;
         margin: 0px;
         color: white;
+        background-color: hsl(257, 10%, 14%);
     }
 
     .main-container {
@@ -59,6 +60,11 @@
                 font-weight: normal;
                 font-size: 1.1rem;
             }
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
         }
 
         .sub-card {
@@ -147,6 +153,10 @@
         }
     }
 
+    .content-center {
+        text-align: center;
+    }
+
     @keyframes fadeOut {
         0% {
             opacity: 1;
@@ -187,6 +197,7 @@
                 <li data-content="all" class="side-menu_selected translate">navigation_display_all_settings</li>
                 <li data-content="content1" class="translate">navigation_friends_location_page</li>
                 <li data-content="content2" class="translate">navigation_avatar_details_page</li>
+                <li data-content="content3" class="">Info</li>
             </ul>
         </div>
         <div class="right-container">
@@ -250,6 +261,30 @@
                         </div>
                     </label>
                 </div>
+            </div>
+
+            <div id="content3" style="display: none;" class="hidden">
+                <h1>Info</h1>
+                <div class="content-center">
+                    <h2>Better vrchat DOT com</h2>
+                    <p>Made by riku1227</p>
+                </div>
+
+                <a href="https://github.com/riku1227/Better-vrchat-DOT-com" target="_blank">
+                    <div class="card">
+                        <h3 style="margin-left: 16px;">Github Repository</h3>
+                    </div>
+                </a>
+                <a href="https://x.com/_riku1227_" target="_blank">
+                    <div style="margin-top: 8px;" class="card">
+                        <h3 style="margin-left: 16px;">X(Twitter)</h3>
+                    </div>
+                </a>
+                <a href="https://vrchat.com/home/user/usr_06bbced6-fd2a-47a0-bc73-a7f3b7c74c4e" target="_blank">
+                    <div style="margin-top: 8px;" class="card">
+                        <h3 style="margin-left: 16px;">VRChat</h3>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
