@@ -208,11 +208,6 @@ export class BetterLocationCard {
     static async setupBetterLocationCard() {
         await this.setupOptionValues();
 
-        // 設定で無効化されていたら何もせず処理を終了する
-        if (!BetterLocationCard.enableInstanceUserCount) {
-            return;
-        }
-
         this.updateCoolTime++;
 
         //ロケーションカードが入っているdivを取得する
@@ -236,7 +231,9 @@ export class BetterLocationCard {
             if (this.enableHideInstanceUserCount) {
                 this.hideInstanceUserCountBadge(locationCard);
             } else {
-                this.addInstanceUserCountUpdateButton(locationCard);
+                if(BetterLocationCard.enableInstanceUserCount) {
+                    this.addInstanceUserCountUpdateButton(locationCard);
+                }
             }
         }
     }
