@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "rollup": "^3.29.5",
+    "rollup": "^3.30.0",
     "typescript": "^5.0.2"
   },
   "dependencies": {
